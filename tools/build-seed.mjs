@@ -1,7 +1,7 @@
 // Generates supabase/migrations/0002_sample_menu.sql from assets/js/core/sample-menu.js
 // Run: node tools/build-seed.mjs
 import { writeFileSync } from 'node:fs';
-import { SAMPLE_MENU, SAMPLE_TABLES } from '../assets/js/core/sample-menu.js';
+import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../assets/js/core/sample-menu.js';
 
 const q = (s) => `'${String(s).replace(/'/g, "''")}'`;
 const lines = [];
@@ -17,10 +17,11 @@ SAMPLE_MENU.forEach((cat, ci) => {
   lines.push(`  values (p_restaurant_id, ${q(cat.name_es)}, ${q(cat.name_en)}, ${q(cat.station)}, ${ci}) returning id into v_cat;`);
   cat.items.forEach((it, ii) => {
     const allergens = `array[${it.allergens.map(q).join(',')}]::text[]`;
-    lines.push(`  insert into public.items (restaurant_id, category_id, name_es, name_en, desc_es, desc_en, price_cents, allergens, options, sort)`);
-    lines.push(`  values (p_restaurant_id, v_cat, ${q(it.name_es)}, ${q(it.name_en)}, ${q(it.desc_es)}, ${q(it.desc_en)}, ${it.price_cents}, ${allergens}, ${q(JSON.stringify(it.options))}::jsonb, ${ii});`);
+    lines.push(`  insert into public.items (restaurant_id, category_id, name_es, name_en, desc_es, desc_en, price_cents, allergens, options, sort, image_url, featured)`);
+    lines.push(`  values (p_restaurant_id, v_cat, ${q(it.name_es)}, ${q(it.name_en)}, ${q(it.desc_es)}, ${q(it.desc_en)}, ${it.price_cents}, ${allergens}, ${q(JSON.stringify(it.options))}::jsonb, ${ii}, ${it.image_url ? q(it.image_url) : 'null'}, ${it.featured ? 'true' : 'false'});`);
   });
 });
+lines.push(`  update public.restaurants set cover_url = coalesce(cover_url, ${q(SAMPLE_COVER)}) where id = p_restaurant_id;`);
 lines.push('  if not exists (select 1 from public.dining_tables where restaurant_id = p_restaurant_id) then');
 lines.push(`    insert into public.dining_tables (restaurant_id, label, sort)`);
 lines.push(`    select p_restaurant_id, t.label, t.ord::int - 1 from unnest(array[${SAMPLE_TABLES.map(q).join(', ')}]) with ordinality as t(label, ord);`);

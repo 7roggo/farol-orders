@@ -1,7 +1,7 @@
 // Customer page text, Spanish and English.
 export const S = {
   es: {
-    table: 'Mesa', menuOnly: 'Solo carta', viewOnly: 'Escanea el código QR de tu mesa para pedir.',
+    table: 'Mesa', menuOnly: 'Solo carta', ourPicks: 'Recomendados de la casa', openNow: 'Abierto · pide desde la mesa', closedShort: 'Cerrado ahora', pausedShort: 'Pedidos en pausa unos minutos', seeStatus: 'Ver estado', viewOnly: 'Escanea el código QR de tu mesa para pedir.',
     closed: 'Ahora mismo estamos cerrados. Horario de hoy:', paused: 'La cocina va a tope. Los pedidos vuelven en unos minutos; mientras tanto, pide al camarero.',
     soldOut: 'Agotado', add: 'Añadir', save: 'Guardar', required: 'Obligatorio', optional: 'Opcional', chooseMany: 'Puedes elegir varios',
     chooseOne: 'Elige una opción', notePh: '¿Algo especial? p. ej. sin cebolla', noteLabel: 'Petición especial',
@@ -34,7 +34,7 @@ export const S = {
     err_load: 'No se ha podido cargar la carta. Comprueba tu conexión y vuelve a abrir el enlace.',
   },
   en: {
-    table: 'Table', menuOnly: 'Menu only', viewOnly: 'Scan the QR code on your table to order.',
+    table: 'Table', menuOnly: 'Menu only', ourPicks: 'House favourites', openNow: 'Open · order from your table', closedShort: 'Closed now', pausedShort: 'Ordering paused for a few minutes', seeStatus: 'See status', viewOnly: 'Scan the QR code on your table to order.',
     closed: "We're closed right now. Today's hours:", paused: "The kitchen is very busy. Ordering will be back in a few minutes; in the meantime, ask a waiter.",
     soldOut: 'Sold out', add: 'Add', save: 'Save', required: 'Required', optional: 'Optional', chooseMany: 'Choose as many as you like',
     chooseOne: 'Choose one', notePh: 'Anything special? e.g. no onion', noteLabel: 'Special request',

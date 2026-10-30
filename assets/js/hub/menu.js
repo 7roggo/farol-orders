@@ -106,6 +106,10 @@ function ItemEditor({ api, t, rid, item, categories, onClose, onSaved }) {
           ${a.es}</label>`)}
       </div>
     </fieldset>
+    <div class="h-featured">
+      <${Switch} checked=${!!f.featured} label=${t.featured} onChange=${(v) => set({ featured: v })} />
+      <small class="h-field-hint">${t.featuredHint}</small>
+    </div>
     <fieldset class="h-fieldset"><legend>${t.photo}</legend>
       <div class="h-photo">
         ${f.image_url ? html`<img src=${f.image_url} alt="" />` : html`<div class="h-photo-empty"><${Icon} name="photo" size=${26} /></div>`}
@@ -236,7 +240,7 @@ export function MenuView({ api, t, r, role }) {
           ${list.map((it, ii) => html`<li class="h-item ${it.sold_out ? 'is-out' : ''} ${it.active ? '' : 'is-hidden'}">
             ${it.image_url ? html`<img class="h-item-img" src=${it.image_url} alt="" />` : html`<span class="h-item-img is-empty" aria-hidden="true"></span>`}
             <div class="h-item-main">
-              <div class="h-item-name">${it.name_es || it.name_en}${!it.name_en && owner ? html` <span class="h-tag is-warn">EN</span>` : null}</div>
+              <div class="h-item-name">${it.name_es || it.name_en}${it.featured ? html` <span class="h-tag is-feat">★</span>` : null}${!it.name_en && owner ? html` <span class="h-tag is-warn">EN</span>` : null}</div>
               <div class="h-item-meta">
                 <span>${money(it.price_cents, r.currency)}</span>
                 ${it.options?.length ? html`<span>${t.optCount(it.options.length)}</span>` : null}

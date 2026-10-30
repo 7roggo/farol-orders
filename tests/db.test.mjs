@@ -44,6 +44,11 @@ const rid = (await q1(`select public.admin_create_restaurant('Casa Lola','casa-l
 ok(rid, 'restaurant created');
 const counts = await q1(`select (select count(*) from categories where restaurant_id=$1) c, (select count(*) from items where restaurant_id=$1) i, (select count(*) from dining_tables where restaurant_id=$1) t`, [rid]);
 ok(counts.c == 5 && counts.i == 17 && counts.t == 13, `sample menu seeded ${JSON.stringify(counts)}`);
+const look = await q1(`select r.cover_url, r.menu_theme, (select count(*)::int from items where restaurant_id=r.id and image_url is not null) photos,
+  (select count(*)::int from items where restaurant_id=r.id and featured) feats from restaurants r where r.id=$1`, [rid]);
+ok(look.cover_url && look.menu_theme === 'tasca' && look.photos === 9 && look.feats === 4, `menu look: ${JSON.stringify(look)}`);
+await db.exec(readFileSync(new URL('../supabase/updates/update-01-menu-photos.sql', import.meta.url), 'utf8'));
+ok((await q1(`select accent_color from restaurants where id=$1`, [rid])).accent_color === '#C8553D', 'update file runs on an existing database (twice) and brands Casa Lola');
 ok((await q1(`select role from restaurant_members where user_id=$1`, [owner])).role === 'owner', 'existing user added directly as owner');
 
 console.log('Non-admin cannot create restaurants');
@@ -60,6 +65,7 @@ await as(null);
 const tok = (await q1(`select token from dining_tables where restaurant_id=$1 and label='Mesa 3'`, [rid])).token;
 const menu = (await q1(`select public.get_public_menu($1) m`, [tok])).m;
 ok(menu.table.label === 'Mesa 3' && menu.items.length === 17 && menu.restaurant.is_open === true, 'menu by table token');
+ok(menu.restaurant.cover_url && menu.items.some((i) => i.featured && i.image_url), 'public menu includes cover and featured photos');
 await expectErr(`select public.get_public_menu('nope')`, [], 'table_not_found', 'bad token');
 
 const byName = (n) => menu.items.find((i) => i.name_es === n);

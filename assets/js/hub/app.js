@@ -141,6 +141,25 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
   const [printers, setPrinters] = useState([]);
   const [live, setLive] = useState(true);
   const [shiftStarted, setShiftStarted] = useState(false);
+  const [kitchen, setKitchen] = useState(false);
+  // Keep the screen awake while the shift runs, so alerts are never missed on a tablet.
+  useEffect(() => {
+    if (!shiftStarted || !navigator.wakeLock) return;
+    let lock = null;
+    const get = () => navigator.wakeLock.request('screen').then((l) => { lock = l; }).catch(() => {});
+    get();
+    const onVis = () => document.visibilityState === 'visible' && get();
+    document.addEventListener('visibilitychange', onVis);
+    return () => { document.removeEventListener('visibilitychange', onVis); lock?.release?.().catch(() => {}); };
+  }, [shiftStarted]);
+  const toggleKitchen = () => {
+    const next = !kitchen;
+    setKitchen(next);
+    try {
+      if (next && document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
+      if (!next && document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    } catch { /* fullscreen not allowed here */ }
+  };
   const [soundOn, setSoundOn] = useState(() => store.get('farol-sound', true));
   const [device, setDeviceState] = useState(() => getDevice(restaurantId, api.mode === 'demo'));
   const takeJob = useRef(null);
@@ -217,7 +236,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
     <${LangSwitch} lang=${lang} setLang=${setLang} />
     <button class="h-icon-btn" onClick=${() => api.signOut()} aria-label=${t.signOut} title=${t.signOut}><${Icon} name="logout" /></button>`;
 
-  return html`<div class="hub ${pending ? 'has-new' : ''}">
+  return html`<div class="hub ${pending ? 'has-new' : ''} ${kitchen && view === 'orders' ? 'is-kitchen' : ''}">
     <aside class="h-side">
       <div class="h-side-brand"><${Mark} size=${24} /><span class="h-wordmark">Farol</span></div>
       <div class="h-side-rest">
@@ -248,6 +267,8 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
           <span class="h-only-sm h-top-rest">${r.name}</span>
         </div>
         <div class="h-top-tools">
+          ${view === 'orders' && html`<button class="h-btn h-btn-ghost h-hide-sm" onClick=${toggleKitchen} aria-pressed=${kitchen}>
+            <${Icon} name=${kitchen ? 'x' : 'kitchen'} size=${16} />${kitchen ? t.exitKitchen : t.kitchenMode}</button>`}
           <${PauseControl} api=${api} t=${t} r=${r} onChange=${(p) => setR({ ...r, ...p })} />
           <span class="h-conn ${live ? 'is-live' : 'is-off'}" title=${live ? t.live : t.offline}><span class="h-conn-dot"></span><span class="h-conn-text">${live ? t.live : t.offline}</span></span>
           <button class="h-icon-btn" aria-pressed=${soundOn} aria-label=${soundOn ? t.soundOn : t.soundOff} title=${soundOn ? t.soundOn : t.soundOff}
@@ -257,6 +278,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
           <div class="h-only-sm"><${AccountMenu} email=${session.user.email}>${account}</${AccountMenu}></div>
         </div>
       </header>
+      ${!live && html`<div class="h-offline" role="alert"><${Icon} name="alert" size=${16} />${t.offlineBanner}</div>`}
       <main class="h-main">
         ${view === 'orders' && html`<${OrdersView} api=${api} t=${t} r=${r} orders=${orders} requests=${requests} printers=${printers}
           onRefresh=${refresh} deviceWarning=${deviceWarning} />`}

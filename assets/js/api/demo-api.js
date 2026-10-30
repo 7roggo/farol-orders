@@ -1,10 +1,10 @@
 // Demo backend: the whole platform running inside the browser, no Supabase needed.
 // Same functions as supabase-api.js, same rules as the database. Data is kept in this
 // browser only (and shared between tabs of the same browser).
-import { SAMPLE_MENU, SAMPLE_TABLES } from '../core/sample-menu.js';
+import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js';
 import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js';
 
-const KEY = 'farol-demo-db-v2';
+const KEY = 'farol-demo-db-v3';
 const now = () => new Date().toISOString();
 const fail = (code, detail) => { const e = new Error(code); e.code = code; e.detail = detail || null; throw e; };
 const clone = (x) => JSON.parse(JSON.stringify(x));
@@ -14,8 +14,9 @@ function seed() {
   const db = {
     restaurants: [{
       id: rid, slug: 'casa-lola', name: 'Casa Lola', active: true, timezone: 'Europe/Madrid', currency: 'EUR',
-      default_lang: 'es', welcome_es: 'Pide desde la mesa y te lo llevamos.',
-      welcome_en: "Order from your table and we'll bring it over.", logo_url: null, accent_color: '#2F5D50',
+      default_lang: 'es', welcome_es: 'Tapas caseras y la tortilla de la abuela Lola. Pide desde la mesa y te lo llevamos.',
+      welcome_en: "Homemade tapas and grandma Lola's tortilla. Order from your table and we'll bring it over.", logo_url: null,
+      cover_url: SAMPLE_COVER, menu_theme: 'tasca', accent_color: '#C8553D',
       google_review_url: 'https://www.google.com/maps', hours_enabled: false,
       hours: { 2: [['12:30', '16:30'], ['20:00', '00:30']], 3: [['12:30', '16:30'], ['20:00', '00:30']],
         4: [['12:30', '16:30'], ['20:00', '00:30']], 5: [['12:30', '16:30'], ['20:00', '01:30']],
@@ -42,7 +43,7 @@ function seedMenu(db, rid) {
     const cid = uid();
     db.categories.push({ id: cid, restaurant_id: rid, name_es: cat.name_es, name_en: cat.name_en, station: cat.station, sort: ci, active: true, created_at: now() });
     cat.items.forEach((it, ii) => db.items.push({
-      id: uid(), restaurant_id: rid, category_id: cid, ...clone(it), image_url: null, sold_out: false, active: true, sort: ii, created_at: now(),
+      id: uid(), restaurant_id: rid, category_id: cid, image_url: null, featured: false, ...clone(it), sold_out: false, active: true, sort: ii, created_at: now(),
     }));
   });
   SAMPLE_TABLES.forEach((label, i) => db.dining_tables.push({ id: uid(), restaurant_id: rid, label, token: randomToken(16), sort: i, active: true, created_at: now() }));
@@ -417,7 +418,7 @@ export function createDemoApi() {
       if (db.restaurants.some((r) => r.slug === slug)) fail('duplicate_slug');
       const r = upsert('restaurants', {
         slug, name, active: true, timezone: 'Europe/Madrid', currency: 'EUR', default_lang: 'es', welcome_es: '', welcome_en: '',
-        logo_url: null, accent_color: '#2F5D50', google_review_url: null, hours_enabled: false, hours: {}, ordering_paused: false, paused_until: null,
+        logo_url: null, cover_url: sampleMenu ? SAMPLE_COVER : null, menu_theme: 'tasca', accent_color: '#C8553D', google_review_url: null, hours_enabled: false, hours: {}, ordering_paused: false, paused_until: null,
       });
       if (ownerEmail) db.invites.push({ restaurant_id: r.id, email: ownerEmail.toLowerCase(), role: 'owner' });
       if (sampleMenu) seedMenu(db, r.id);

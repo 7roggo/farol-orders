@@ -56,6 +56,7 @@ function ItemSheet({ item, line, lang, currency, onSave, onClose, canOrder }) {
   return html`<${Sheet} onClose=${onClose} label=${pick(item, 'name', lang)} tall>
     ${item.image_url && html`<img class="o-sheet-img" src=${item.image_url} alt="" />`}
     <h2 class="o-sheet-title">${pick(item, 'name', lang)}</h2>
+    <p class="o-sheet-price">${money(item.price_cents, currency, lang)}</p>
     ${pick(item, 'desc', lang) && html`<p class="o-sheet-desc">${pick(item, 'desc', lang)}</p>`}
     <${Allergens} ids=${item.allergens} lang=${lang} />
     ${(item.options || []).map((g) => html`<fieldset class="o-group">
@@ -292,63 +293,89 @@ export function OrderApp({ api, tableToken, slug }) {
     return () => obs.disconnect();
   }, [data, viewing]);
 
-  const accent = r?.accent_color || '#2F5D50';
-  if (fatal) return html`<div class="ord" style=${`--accent:${accent}`}><div class="o-fatal"><p>${fatal}</p></div></div>`;
-  if (!data) return html`<div class="ord" style=${`--accent:${accent}`}><div class="o-fatal"><p class="o-muted">${t.loading}</p></div></div>`;
+  const accent = r?.accent_color || '#C8553D';
+  const theme = `theme-${r?.menu_theme || 'tasca'}`;
+  if (fatal) return html`<div class="ord ${theme}" style=${`--accent:${accent}`}><div class="o-fatal"><p>${fatal}</p></div></div>`;
+  if (!data) return html`<div class="ord ${theme}" style=${`--accent:${accent}`}><div class="o-fatal"><p class="o-muted">${t.loading}</p></div></div>`;
 
   const activeMine = mine.filter((m) => m.order_id);
-  return html`<div class="ord" style=${`--accent:${accent}`} lang=${lang}>
-    <header class="o-head">
-      <div class="o-brand">
-        ${r.logo_url ? html`<img class="o-logo" src=${r.logo_url} alt="" />` : null}
-        <div>
-          <h1 class="o-name">${r.name}</h1>
-          <div class="o-table">${data.table ? data.table.label : t.menuOnly}</div>
-        </div>
-      </div>
-      <div class="o-head-actions">
-        <div class="o-lang" role="group" aria-label="Idioma / Language">
-          <button class=${lang === 'es' ? 'is-on' : ''} aria-pressed=${lang === 'es'} onClick=${() => switchLang('es')}>ES</button>
-          <button class=${lang === 'en' ? 'is-on' : ''} aria-pressed=${lang === 'en'} onClick=${() => switchLang('en')}>EN</button>
-        </div>
-      </div>
-    </header>
+  const inCart = (id) => cart.filter((l) => l.item_id === id).reduce((s, l) => s + l.qty, 0);
+  const picks = data.items.filter((i) => i.featured && i.image_url && !i.sold_out).slice(0, 8);
+  const cats = data.categories.filter((c) => data.items.some((i) => i.category_id === c.id));
+  const statusLine = !data.table ? t.menuOnly
+    : !r.is_open ? `${t.closedShort} · ${hoursToday(r.hours, r.timezone, lang)}`
+    : r.is_paused ? t.pausedShort : t.openNow;
+  const langSwitch = html`<div class="o-lang" role="group" aria-label="Idioma / Language">
+    <button class=${lang === 'es' ? 'is-on' : ''} aria-pressed=${lang === 'es'} onClick=${() => switchLang('es')}>ES</button>
+    <button class=${lang === 'en' ? 'is-on' : ''} aria-pressed=${lang === 'en'} onClick=${() => switchLang('en')}>EN</button>
+  </div>`;
+  const open = (it) => setSheet({ type: 'item', item: it });
 
-    ${viewing ? html`<main class="o-scroll"><${OrderStatus} api=${api} entry=${viewing} lang=${lang}
-        onBack=${() => setViewing(null)} onHelp=${() => setSheet({ type: 'help' })} /></main>` : html`
-    <nav class="o-cats" aria-label="Carta">
-      ${data.categories.filter((c) => data.items.some((i) => i.category_id === c.id)).map((c) => html`
-        <a href=${`#cat-${c.id}`} class=${activeCat === c.id ? 'is-on' : ''}
+  return html`<div class="ord ${theme}" style=${`--accent:${accent}`} lang=${lang}>
+    ${viewing ? html`<main class="o-scroll">
+        <header class="o-head"><span class="o-head-name">${r.name}</span>${langSwitch}</header>
+        <${OrderStatus} api=${api} entry=${viewing} lang=${lang} onBack=${() => setViewing(null)} onHelp=${() => setSheet({ type: 'help' })} />
+      </main>` : html`
+    <main class="o-scroll" ref=${scrollRef}>
+      <header class="o-hero ${r.cover_url ? 'has-cover' : ''}">
+        ${r.cover_url && html`<img class="o-hero-img" src=${r.cover_url} alt="" />`}
+        <div class="o-hero-top">
+          ${data.table ? html`<span class="o-chip">${data.table.label}</span>` : html`<span></span>`}
+          ${langSwitch}
+        </div>
+        <div class="o-hero-body">
+          ${r.logo_url && html`<img class="o-logo" src=${r.logo_url} alt="" />`}
+          <h1 class="o-name">${r.name}</h1>
+          <p class="o-statusline"><span class="o-dot ${data.table && r.is_open && !r.is_paused ? 'is-on' : ''}"></span>${statusLine}</p>
+        </div>
+      </header>
+
+      ${pick(r, 'welcome', lang) && html`<p class="o-welcome">${pick(r, 'welcome', lang)}</p>`}
+      ${!data.table && html`<p class="o-notice">${t.viewOnly}</p>`}
+      ${data.table && r.is_open && r.is_paused && html`<p class="o-notice">${t.paused}</p>`}
+      ${activeMine.length > 0 && html`<div class="o-mine">
+        ${activeMine.slice(0, 3).map((m) => html`<button class="o-mine-row" onClick=${() => setViewing(m)}>
+          <span>${t.orderNo} <strong>#${m.number}</strong></span><span class="o-mine-go">${t.seeStatus} ›</span></button>`)}
+      </div>`}
+
+      <nav class="o-cats" aria-label="Carta">
+        ${cats.map((c) => html`<a href=${`#cat-${c.id}`} class=${activeCat === c.id ? 'is-on' : ''}
           onClick=${(e) => { e.preventDefault(); scrollRef.current.querySelector(`#cat-${c.id}`)?.scrollIntoView({ behavior: 'smooth' }); }}>
           ${pick(c, 'name', lang)}</a>`)}
-    </nav>
-    <main class="o-scroll" ref=${scrollRef}>
-      ${!data.table && html`<p class="o-notice">${t.viewOnly}</p>`}
-      ${data.table && !r.is_open && html`<p class="o-notice">${t.closed} ${hoursToday(r.hours, r.timezone, lang)}</p>`}
-      ${data.table && r.is_open && r.is_paused && html`<p class="o-notice">${t.paused}</p>`}
-      ${pick(r, 'welcome', lang) && html`<p class="o-welcome">${pick(r, 'welcome', lang)}</p>`}
-      ${activeMine.length > 0 && html`<section class="o-mine">
-        <h2 class="o-h3">${t.myOrders}</h2>
-        ${activeMine.slice(0, 4).map((m) => html`<button class="o-mine-row" onClick=${() => setViewing(m)}>
-          <span>#${m.number}</span><span class="o-muted">${new Date(m.created_at).toLocaleTimeString(lang === 'es' ? 'es-ES' : 'en-GB', { hour: '2-digit', minute: '2-digit' })}</span></button>`)}
+      </nav>
+
+      ${picks.length > 0 && html`<section class="o-picks" aria-label=${t.ourPicks}>
+        <h2 class="o-cat-title">${t.ourPicks}</h2>
+        <div class="o-picks-row">
+          ${picks.map((it) => html`<button class="o-pick" onClick=${() => open(it)}>
+            <span class="o-pick-media"><img src=${it.image_url} alt="" loading="lazy" />
+              <span class="o-add ${inCart(it.id) ? 'has-qty' : ''}" aria-hidden="true">${inCart(it.id) || '+'}</span></span>
+            <span class="o-pick-name">${pick(it, 'name', lang)}</span>
+            <span class="o-pick-price">${money(it.price_cents, r.currency, lang)}</span>
+          </button>`)}
+        </div>
       </section>`}
-      ${data.categories.map((c) => {
+
+      ${cats.map((c) => {
         const items = data.items.filter((i) => i.category_id === c.id);
-        if (!items.length) return null;
         return html`<section class="o-section" id=${`cat-${c.id}`} data-cat=${c.id}>
           <h2 class="o-cat-title">${pick(c, 'name', lang)}</h2>
           <ul class="o-items">
             ${items.map((it) => html`<li>
-              <button class="o-item ${it.sold_out ? 'is-out' : ''}" onClick=${() => setSheet({ type: 'item', item: it })}>
+              <button class="o-item ${it.sold_out ? 'is-out' : ''} ${it.image_url ? 'has-img' : ''}" onClick=${() => open(it)}>
                 <span class="o-item-text">
                   <span class="o-item-name">${pick(it, 'name', lang)}</span>
                   ${pick(it, 'desc', lang) && html`<span class="o-item-desc">${pick(it, 'desc', lang)}</span>`}
-                  <${Allergens} ids=${it.allergens} lang=${lang} small />
+                  <span class="o-item-meta">
+                    <span class="o-item-price">${it.sold_out ? t.soldOut : money(it.price_cents, r.currency, lang)}</span>
+                    ${it.allergens?.length ? html`<span class="o-item-allergens" title=${it.allergens.map((a) => allergenById[a]?.[lang]).join(', ')}>
+                      ${it.allergens.map((a) => allergenById[a]?.icon).join(' ')}</span>` : null}
+                  </span>
                 </span>
-                <span class="o-item-side">
-                  ${it.image_url && html`<img class="o-item-img" src=${it.image_url} alt="" loading="lazy" />`}
-                  <span class="o-item-price">${it.sold_out ? t.soldOut : money(it.price_cents, r.currency, lang)}</span>
-                </span>
+                ${it.image_url
+                  ? html`<span class="o-item-media"><img src=${it.image_url} alt="" loading="lazy" />
+                      ${canOrder && !it.sold_out && html`<span class="o-add ${inCart(it.id) ? 'has-qty' : ''}" aria-hidden="true">${inCart(it.id) || '+'}</span>`}</span>`
+                  : canOrder && !it.sold_out && html`<span class="o-add is-solo ${inCart(it.id) ? 'has-qty' : ''}" aria-hidden="true">${inCart(it.id) || '+'}</span>`}
               </button>
             </li>`)}
           </ul>
@@ -356,11 +383,12 @@ export function OrderApp({ api, tableToken, slug }) {
       })}
       <footer class="o-foot">
         <button class="o-link" onClick=${() => setSheet({ type: 'info' })}>${t.allergens} · ${t.info}</button>
+        <p class="o-made">${t.payAtTable}</p>
       </footer>
     </main>`}
 
     <div class="o-bar">
-      ${data.table && html`<button class="o-btn o-btn-quiet o-bar-help" onClick=${() => setSheet({ type: 'help' })}>${t.help}</button>`}
+      ${data.table && html`<button class="o-btn o-btn-float o-bar-help" onClick=${() => setSheet({ type: 'help' })}>${t.help}</button>`}
       ${!viewing && count > 0 && html`<button class="o-btn o-btn-primary o-grow o-bar-cart" onClick=${() => setSheet({ type: 'cart' })}>
         <span class="o-bar-count">${count}</span><span>${t.viewOrder}</span><span>${money(total, r.currency, lang)}</span></button>`}
     </div>

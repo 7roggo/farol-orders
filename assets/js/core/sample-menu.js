@@ -4,13 +4,17 @@
 
 const g = (id, name_es, name_en, required, multi, choices) => ({ id, name_es, name_en, required, multi, choices });
 const c = (id, name_es, name_en, price_cents = 0) => ({ id, name_es, name_en, price_cents });
+const photo = (id) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=80`;
+
+// Cover photo used for the sample restaurant (same as the Casa Lola website).
+export const SAMPLE_COVER = 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?auto=format&fit=crop&w=1600&q=80';
 
 export const SAMPLE_MENU = [
   {
     name_es: 'Para picar', name_en: 'To share', station: 'kitchen',
     items: [
       {
-        name_es: 'Croquetas de jamón ibérico', name_en: 'Iberian ham croquettes',
+        name_es: 'Croquetas de jamón ibérico', image_url: photo('photo-1767974963436-2208b3553561'), featured: true, name_en: 'Iberian ham croquettes',
         desc_es: 'Cremosas, hechas en casa cada mañana.', desc_en: 'Creamy, made in house every morning.',
         price_cents: 600, allergens: ['gluten', 'milk', 'eggs'],
         options: [g('size', 'Tamaño', 'Size', true, false, [
@@ -19,7 +23,7 @@ export const SAMPLE_MENU = [
         ])],
       },
       {
-        name_es: 'Patatas bravas', name_en: 'Patatas bravas',
+        name_es: 'Patatas bravas', image_url: photo('photo-1565599837634-134bc3aadce8'), featured: true, name_en: 'Patatas bravas',
         desc_es: 'Patata frita con nuestra salsa brava.', desc_en: 'Fried potatoes with our spicy brava sauce.',
         price_cents: 550, allergens: ['eggs'],
         options: [g('sauce', 'Salsa', 'Sauce', true, false, [
@@ -64,12 +68,12 @@ export const SAMPLE_MENU = [
         ],
       },
       {
-        name_es: 'Pulpo a la gallega', name_en: 'Galician-style octopus',
+        name_es: 'Pulpo a la gallega', image_url: photo('photo-1531890820402-2a683fbfd30c'), featured: true, name_en: 'Galician-style octopus',
         desc_es: 'Con patata cocida, pimentón y aceite.', desc_en: 'With boiled potato, paprika and olive oil.',
         price_cents: 1650, allergens: ['molluscs'], options: [],
       },
       {
-        name_es: 'Gambas al ajillo', name_en: 'Garlic prawns',
+        name_es: 'Gambas al ajillo', image_url: photo('photo-1788462613187-b10c1ac2ea60'), featured: false, name_en: 'Garlic prawns',
         desc_es: 'En cazuela de barro, con guindilla.', desc_en: 'Sizzling in a clay pot with chilli.',
         price_cents: 1200, allergens: ['crustaceans'], options: [],
       },
@@ -89,12 +93,12 @@ export const SAMPLE_MENU = [
     name_es: 'Postres', name_en: 'Desserts', station: 'kitchen',
     items: [
       {
-        name_es: 'Tarta de queso', name_en: 'Baked cheesecake',
+        name_es: 'Tarta de queso', image_url: photo('photo-1759303380841-55c09244fd2b'), featured: true, name_en: 'Baked cheesecake',
         desc_es: 'Cremosa por dentro.', desc_en: 'Soft and creamy in the middle.',
         price_cents: 600, allergens: ['milk', 'eggs', 'gluten'], options: [],
       },
       {
-        name_es: 'Churros con chocolate', name_en: 'Churros with hot chocolate',
+        name_es: 'Churros con chocolate', image_url: photo('photo-1515579171902-e0c5f918b32b'), featured: false, name_en: 'Churros with hot chocolate',
         desc_es: '', desc_en: '',
         price_cents: 550, allergens: ['gluten', 'milk'], options: [],
       },
@@ -104,7 +108,7 @@ export const SAMPLE_MENU = [
     name_es: 'Bebidas', name_en: 'Drinks', station: 'bar',
     items: [
       {
-        name_es: 'Cerveza de barril', name_en: 'Draught beer',
+        name_es: 'Cerveza de barril', image_url: photo('photo-1608270586620-248524c67de9'), featured: false, name_en: 'Draught beer',
         desc_es: '', desc_en: '', price_cents: 250, allergens: ['gluten'],
         options: [g('size', 'Tamaño', 'Size', true, false, [
           c('cana', 'Caña (20 cl)', 'Small (20 cl)'),
@@ -112,12 +116,12 @@ export const SAMPLE_MENU = [
         ])],
       },
       {
-        name_es: 'Vermut de grifo', name_en: 'House vermouth',
+        name_es: 'Vermut de grifo', image_url: photo('photo-1615830783066-26a99bc9d959'), featured: false, name_en: 'House vermouth',
         desc_es: 'Con hielo y naranja.', desc_en: 'With ice and orange.',
         price_cents: 350, allergens: ['sulphites'], options: [],
       },
       {
-        name_es: 'Vino tinto (copa)', name_en: 'Red wine (glass)',
+        name_es: 'Vino tinto (copa)', image_url: photo('photo-1510812431401-41d2bd2722f3'), featured: false, name_en: 'Red wine (glass)',
         desc_es: '', desc_en: '', price_cents: 380, allergens: ['sulphites'],
         options: [g('wine', 'Vino', 'Wine', true, false, [
           c('rioja', 'Rioja crianza', 'Rioja crianza'),

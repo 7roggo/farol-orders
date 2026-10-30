@@ -73,6 +73,9 @@ Both protocols were tested against simulated printers, not physical ones, so **t
 - **GitHub Pages:** free.
 - **Supabase Free:** fine for testing, but **a free project pauses after 7 days without activity**. Once restaurants depend on it, move to **Pro** (about $25/month per organization). All restaurants share one project, so that's one cost for all of them.
 
+## Updating an existing database
+When a new version needs database changes, it comes with a file in `supabase/updates/`. Paste it into **SQL Editor → Run** once. Each file is safe to run again. `supabase/setup.sql` always contains everything, for brand-new projects.
+
 ## Changing things
 - **Sample menu:** edit `assets/js/core/sample-menu.js` and run `npm run build:seed` (rebuilds `supabase/setup.sql`). To apply it to an existing project, run just `supabase/migrations/0002_sample_menu.sql` in the SQL Editor. Existing restaurants aren't affected.
 - **Texts:** `assets/js/order/strings.js` (customer) and `assets/js/hub/strings.js` (hub), in Spanish and English.

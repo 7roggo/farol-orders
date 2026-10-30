@@ -76,6 +76,7 @@ export function SettingsView({ api, t, r, lang, role, onSaved }) {
     const patch = {
       name: f.name.trim(), welcome_es: f.welcome_es, welcome_en: f.welcome_en, accent_color: f.accent_color,
       logo_url: f.logo_url || null, google_review_url: f.google_review_url?.trim() || null, default_lang: f.default_lang,
+      cover_url: f.cover_url?.trim() || null, menu_theme: f.menu_theme || 'tasca',
       hours_enabled: f.hours_enabled, hours: f.hours || {},
     };
     const saved = await attempt(() => api.updateRestaurant(r.id, patch), err);
@@ -108,6 +109,32 @@ export function SettingsView({ api, t, r, lang, role, onSaved }) {
       </div>
       <${Field} label=${t.reviewUrl} hint=${t.reviewHint}>
         <input class="h-input" type="url" placeholder="https://g.page/r/…/review" value=${f.google_review_url || ''} onInput=${(e) => set({ google_review_url: e.target.value })} /></${Field}>
+    </section>
+
+    <section class="h-panel">
+      <h2>${t.menuLook}</h2>
+      <p class="h-muted h-small">${t.menuLookHint}</p>
+      <div class="h-themes" role="radiogroup" aria-label=${t.menuStyle}>
+        ${['tasca', 'moderno', 'noche'].map((k) => html`<label class="h-theme ${(f.menu_theme || 'tasca') === k ? 'is-on' : ''}">
+          <input type="radio" name="menu_theme" checked=${(f.menu_theme || 'tasca') === k} onChange=${() => set({ menu_theme: k })} />
+          <span class="h-theme-swatch is-${k}" style=${`--sw:${f.accent_color}`}><span>Aa</span><i></i></span>
+          <span><strong>${t[`theme_${k}`]}</strong><small>${t[`theme_${k}_hint`]}</small></span>
+        </label>`)}
+      </div>
+      <${Field} label=${t.coverPhoto} hint=${t.coverHint}>
+        <div class="h-cover">
+          ${f.cover_url ? html`<img src=${f.cover_url} alt="" />` : html`<div class="h-photo-empty">—</div>`}
+          <div class="h-photo-actions">
+            <label class="h-btn h-btn-ghost h-btn-small">${t.uploadPhoto}
+              <input type="file" accept="image/*" hidden onChange=${async (e) => {
+                const url = await attempt(() => api.uploadImage(r.id, e.target.files[0]), err);
+                if (url) set({ cover_url: url });
+              }} /></label>
+            <input class="h-input" placeholder=${t.orPasteUrl} value=${f.cover_url?.startsWith('data:') ? '' : f.cover_url || ''} onChange=${(e) => set({ cover_url: e.target.value.trim() || null })} />
+            ${f.cover_url && html`<button class="h-link h-link-bad" onClick=${() => set({ cover_url: null })}>${t.remove}</button>`}
+          </div>
+        </div>
+      </${Field}>
     </section>
 
     <section class="h-panel">
