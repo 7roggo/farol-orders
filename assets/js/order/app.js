@@ -1,7 +1,7 @@
 // Customer ordering page: what people see after scanning the QR code on their table.
-import { html, render, useState, useEffect, useMemo, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300457';
-import { pick, money, store, allergenById, ALLERGENS, unitPrice, hoursToday, uid } from '../core/util.js?v=202610300457';
-import { S, errorText } from './strings.js?v=202610300457';
+import { html, render, useState, useEffect, useMemo, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300621';
+import { pick, money, store, allergenById, ALLERGENS, unitPrice, hoursToday, uid } from '../core/util.js?v=202610300621';
+import { S, errorText } from './strings.js?v=202610300621';
 
 // Spanish phones get Spanish, any other language gets English; unknown → the restaurant's default.
 const browserLang = (fallback) => {

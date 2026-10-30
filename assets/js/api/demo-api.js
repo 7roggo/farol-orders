@@ -1,8 +1,8 @@
 // Demo backend: the whole platform running inside the browser, no Supabase needed.
 // Same functions as supabase-api.js, same rules as the database. Data is kept in this
 // browser only (and shared between tabs of the same browser).
-import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js?v=202610300457';
-import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js?v=202610300457';
+import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js?v=202610300621';
+import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js?v=202610300621';
 
 const KEY = 'farol-demo-db-v3';
 const now = () => new Date().toISOString();
@@ -23,7 +23,7 @@ function seed() {
         6: [['12:30', '01:30']], 7: [['12:30', '17:00']] },
       ordering_paused: false, paused_until: null, created_at: now(),
     }],
-    categories: [], items: [], dining_tables: [], orders: [], service_requests: [], printers: [], print_jobs: [],
+    categories: [], items: [], dining_tables: [], orders: [], service_requests: [], printers: [], print_jobs: [], support_tickets: [],
     members: [{ restaurant_id: rid, user_id: 'demo-owner', role: 'owner' }],
     users: [{ id: 'demo-owner', email: 'lola@casalola.demo' }, { id: 'demo-staff', email: 'camarero@casalola.demo' }],
     invites: [],
@@ -397,6 +397,32 @@ export function createDemoApi() {
       db.members = db.members.filter((m) => !(m.restaurant_id === rid && m.user_id === uidToRemove)); save();
     },
     async removeInvite(rid, email) { db.invites = db.invites.filter((i) => !(i.restaurant_id === rid && i.email === email)); save(); },
+
+    // ---------- support (Help from Farol) ----------
+    async listSupport(rid) { db.support_tickets ||= []; return delay(db.support_tickets.filter((x) => x.restaurant_id === rid).sort((a, b) => b.created_at.localeCompare(a.created_at)).slice(0, 20)); },
+    async createSupport(rid, { message, topic, urgent, context }) {
+      mustMember(rid); db.support_tickets ||= [];
+      if (!String(message || '').trim()) fail('empty_message');
+      const row = upsert('support_tickets', { restaurant_id: rid, created_by: userId(), created_email: session?.user?.email || '', topic: topic || 'other',
+        urgent: !!urgent, message: String(message).trim().slice(0, 2000), context: context || {}, status: 'open', reply: null, replied_at: null, resolved_at: null });
+      return row.id;
+    },
+    async adminSupportList(includeResolved = false) {
+      db.support_tickets ||= [];
+      return delay(db.support_tickets.filter((x) => includeResolved || x.status === 'open' || (x.resolved_at && Date.now() - new Date(x.resolved_at) < 7 * 86400000))
+        .map((x) => ({ ...x, restaurant: R(x.restaurant_id)?.name, slug: R(x.restaurant_id)?.slug }))
+        .sort((a, b) => (b.status === 'open') - (a.status === 'open') || b.urgent - a.urgent || b.created_at.localeCompare(a.created_at)));
+    },
+    async adminSupportUpdate(id, reply, resolve) {
+      const patch = { id };
+      if (reply && reply.trim()) { patch.reply = reply.trim(); patch.replied_at = now(); }
+      if (resolve) { patch.status = 'resolved'; patch.resolved_at = now(); }
+      upsert('support_tickets', patch);
+    },
+    adminSubscribeSupport(onChange) {
+      const l = (table, type, row) => { if (table === 'support_tickets') onChange(type, row); };
+      listeners.add(l); return () => listeners.delete(l);
+    },
 
     // ---------- Farol admin ----------
     isPlatformAdmin: async () => userId() === 'demo-owner',

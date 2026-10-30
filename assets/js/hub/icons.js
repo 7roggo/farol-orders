@@ -1,5 +1,5 @@
 // Line icons for the hub (24×24 grid, 1.75 stroke, drawn in currentColor).
-import { html } from '../vendor/preact-htm.js?v=202610300457';
+import { html } from '../vendor/preact-htm.js?v=202610300621';
 
 const P = {
   orders: ['M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8', 'M10.3 21a1.94 1.94 0 0 0 3.4 0'],
@@ -35,6 +35,8 @@ const P = {
   edit: ['M4 20h4L19 9l-4-4L4 16z', 'M13.5 6.5l4 4'],
   link: ['M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1', 'M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1'],
   refresh: ['M21 12a9 9 0 1 1-3-6.7L21 8', 'M21 3v5h-5'],
+  lifebuoy: ['M22 12a10 10 0 1 1-20 0 10 10 0 0 1 20 0z', 'M16 12a4 4 0 1 1-8 0 4 4 0 0 1 8 0z', 'M4.9 4.9l4.3 4.3', 'M14.8 14.8l4.3 4.3', 'M14.8 9.2l4.3-4.3', 'M4.9 19.1l4.3-4.3'],
+  send: ['M22 2 11 13', 'M22 2l-7 20-4-9-9-4z'],
   store: ['M3 9l1.5-5h15L21 9', 'M3 9h18v2a3 3 0 0 1-6 0 3 3 0 0 1-6 0 3 3 0 0 1-6 0z', 'M5 13v8h14v-8'],
 };
 

@@ -1,5 +1,5 @@
 // Live backend: talks to your Supabase project (database, logins, live updates, functions).
-import { uid, localNow } from '../core/util.js?v=202610300457';
+import { uid, localNow } from '../core/util.js?v=202610300621';
 
 function toError(e) {
   const err = new Error(e?.message || String(e));
@@ -157,6 +157,19 @@ export function createSupabaseApi(cfg) {
     removeMember: (rid, userId) => rpc('remove_member', { p_restaurant_id: rid, p_user_id: userId }),
     removeInvite: (rid, email) => rpc('remove_invite', { p_restaurant_id: rid, p_email: email }),
 
+    // ---------- support (Help from Farol) ----------
+    listSupport: (rid) => run(sb.from('support_tickets').select('*').eq('restaurant_id', rid).order('created_at', { ascending: false }).limit(20)),
+    createSupport: (rid, { message, topic, urgent, context }) =>
+      rpc('create_support_ticket', { p_restaurant_id: rid, p_message: message, p_topic: topic, p_urgent: !!urgent, p_context: context || {} }),
+    adminSupportList: (includeResolved = false) => rpc('admin_support_list', { p_include_resolved: includeResolved }),
+    adminSupportUpdate: (id, reply, resolve) => rpc('admin_support_update', { p_ticket_id: id, p_reply: reply || null, p_resolve: !!resolve }),
+    adminSubscribeSupport(onChange) {
+      const ch = sb.channel(`support-${uid()}`)
+        .on('postgres_changes', { event: '*', schema: 'public', table: 'support_tickets' }, (p) => onChange(p.eventType, p.new))
+        .subscribe();
+      return () => sb.removeChannel(ch);
+    },
+
     // ---------- Farol admin ----------
     async isPlatformAdmin() {
       const s = await api.getSession();
@@ -172,7 +185,7 @@ export function createSupabaseApi(cfg) {
     // ---------- live updates ----------
     subscribe(rid, onChange, onStatus) {
       const ch = sb.channel(`hub-${rid}-${uid()}`);
-      for (const table of ['orders', 'service_requests', 'print_jobs', 'printers']) {
+      for (const table of ['orders', 'service_requests', 'print_jobs', 'printers', 'support_tickets']) {
         ch.on('postgres_changes', { event: '*', schema: 'public', table, filter: `restaurant_id=eq.${rid}` },
           (p) => onChange(table, p.eventType, p.new && Object.keys(p.new).length ? p.new : p.old));
       }

@@ -1,11 +1,11 @@
 // Tables and their QR codes. Every table has its own secret code, so orders arrive with the table name.
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610300457';
-import qrcode from '../vendor/qrcode.mjs?v=202610300457';
-import { randomToken } from '../core/util.js?v=202610300457';
-import { siteBase } from '../api/index.js?v=202610300457';
-import { Switch, attempt, toast, Empty, askConfirm } from './ui.js?v=202610300457';
-import { hubError } from './strings.js?v=202610300457';
-import { Icon } from './icons.js?v=202610300457';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610300621';
+import qrcode from '../vendor/qrcode.mjs?v=202610300621';
+import { randomToken } from '../core/util.js?v=202610300621';
+import { siteBase } from '../api/index.js?v=202610300621';
+import { Switch, attempt, toast, Empty, askConfirm } from './ui.js?v=202610300621';
+import { hubError } from './strings.js?v=202610300621';
+import { Icon } from './icons.js?v=202610300621';
 
 export function tableUrl(api, token) {
   return `${siteBase()}order.html?t=${token}${api.mode === 'demo' ? '&demo' : ''}`;

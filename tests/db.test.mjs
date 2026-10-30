@@ -153,6 +153,21 @@ ok(placed2.number === 2, 'second order is #2');
 await db.query(`select public.place_order($1,$2::jsonb)`, [tok, JSON.stringify([{ item_id: pan.id, qty: 1 }])]);
 await expectErr(`select public.place_order($1,$2::jsonb)`, [tok, JSON.stringify([{ item_id: pan.id, qty: 1 }])], 'too_many_orders', 'rate limit per table');
 
+console.log('Help from Farol');
+await as(staff);
+const tid = (await q1(`select public.create_support_ticket($1,'La impresora no imprime','printer',true,'{"page":"orders"}'::jsonb) id`, [rid])).id;
+ok(tid, 'staff can open a support ticket');
+await as(stranger0);
+await expectErr(`select public.create_support_ticket($1,'x')`, [rid], 'not_allowed', 'stranger cannot open tickets for a restaurant');
+await expectErr(`select public.admin_support_list()`, [], 'not_allowed', 'non-admin cannot read the inbox');
+await as(admin);
+const inbox = (await q1(`select public.admin_support_list() l`)).l;
+ok(inbox.length === 1 && inbox[0].urgent && inbox[0].restaurant === 'Casa Lola' && inbox[0].created_email === 'camarero@casalola.test', 'admin inbox shows the ticket with restaurant and sender');
+await db.query(`select public.admin_support_update($1,'Revisa el cable USB',true)`, [tid]);
+await as(owner);
+const mine = (await q1(`select status, reply from support_tickets where id=$1`, [tid]));
+ok(mine.status === 'resolved' && mine.reply === 'Revisa el cable USB', 'restaurant sees the reply and solved status');
+
 console.log('Row level security');
 await db.exec(`grant select, insert, update, delete on all tables in schema public to authenticated, anon;`);
 await as(staff);

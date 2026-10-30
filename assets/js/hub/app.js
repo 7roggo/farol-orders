@@ -1,18 +1,19 @@
 // Restaurant hub: login, live orders, menu, tables & QR, printers, sales, settings.
-import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300457';
-import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610300457';
-import { HS, hubError } from './strings.js?v=202610300457';
-import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610300457';
-import { useAlerts, unlockAudio } from './alerts.js?v=202610300457';
-import { usePrintEngine, getDevice } from './printing.js?v=202610300457';
-import { OrdersView } from './orders.js?v=202610300457';
-import { MenuView } from './menu.js?v=202610300457';
-import { TablesView } from './tables.js?v=202610300457';
-import { PrintersView } from './printers.js?v=202610300457';
-import { StatsView } from './stats.js?v=202610300457';
-import { SettingsView } from './settings.js?v=202610300457';
-import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610300457';
-import { Icon, Mark } from './icons.js?v=202610300457';
+import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300621';
+import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610300621';
+import { HS, hubError } from './strings.js?v=202610300621';
+import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610300621';
+import { useAlerts, unlockAudio } from './alerts.js?v=202610300621';
+import { usePrintEngine, getDevice } from './printing.js?v=202610300621';
+import { OrdersView } from './orders.js?v=202610300621';
+import { MenuView } from './menu.js?v=202610300621';
+import { TablesView } from './tables.js?v=202610300621';
+import { PrintersView } from './printers.js?v=202610300621';
+import { StatsView } from './stats.js?v=202610300621';
+import { SettingsView } from './settings.js?v=202610300621';
+import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610300621';
+import { Icon, Mark } from './icons.js?v=202610300621';
+import { useSupport, SupportButton, SupportModal } from './support.js?v=202610300621';
 
 const NAV = ['orders', 'menu', 'tables', 'printers', 'stats', 'settings'];
 
@@ -142,6 +143,8 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
   const [live, setLive] = useState(true);
   const [shiftStarted, setShiftStarted] = useState(false);
   const [kitchen, setKitchen] = useState(false);
+  const [supportOpen, setSupportOpen] = useState(false);
+  const support = useSupport(api, restaurantId);
   // Keep the screen awake while the shift runs, so alerts are never missed on a tablet.
   useEffect(() => {
     if (!shiftStarted || !navigator.wakeLock) return;
@@ -163,6 +166,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
   const [soundOn, setSoundOn] = useState(() => store.get('farol-sound', true));
   const [device, setDeviceState] = useState(() => getDevice(restaurantId, api.mode === 'demo'));
   const takeJob = useRef(null);
+  const supportLoad = useRef(null);
   const [screenTickets, setScreenTickets] = useState([]);
   const [, tick] = useState(0);
   const rRef = useRef(null);
@@ -201,6 +205,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
         });
       }
       if (table === 'print_jobs' && type !== 'DELETE') takeJob.current?.({ ...row });
+      if (table === 'support_tickets') supportLoad.current?.();
     }, (status) => {
       const ok = status === 'SUBSCRIBED';
       setLive(ok);
@@ -221,6 +226,13 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
     onScreenTicket: (job) => setScreenTickets((x) => [...x, job]),
   });
   takeJob.current = engine.take;
+  supportLoad.current = support.load;
+  // what Farol sees with each help request, so we can fix things without asking twenty questions
+  const supportContext = () => ({
+    page: view, live, lang, device: device.method, device_printers: engine.myIds.length,
+    printers: printers.map((p) => ({ name: p.name, kind: p.kind, seen: p.last_seen_at })),
+    pending: orders.filter((o) => o.status === 'pending').length, browser: navigator.userAgent.slice(0, 160),
+  });
 
   useEffect(() => store.set('farol-hub-view', view), [view]);
 
@@ -253,6 +265,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
             ${k === 'orders' && alertsCount > 0 && html`<span class="h-nav-badge">${alertsCount}</span>`}
           </button>`)}
       </nav>
+      <${SupportButton} t=${t} unread=${support.unread} onClick=${() => setSupportOpen(true)} />
       <div class="h-side-foot">
         <span class="h-side-user" title=${session.user.email}>${session.user.email}</span>
         <div class="h-side-tools">${account}</div>
@@ -275,6 +288,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
             onClick=${() => { unlockAudio(); setSoundOn(!soundOn); store.set('farol-sound', !soundOn); }}><${Icon} name=${soundOn ? 'soundOn' : 'soundOff'} /></button>
           ${!onTryTable && html`<a class="h-icon-btn h-hide-sm" href=${`order.html?r=${r.slug}${api.mode === 'demo' ? '&demo' : ''}`} target="_blank" rel="noopener"
             aria-label=${t.previewMenu} title=${t.previewMenu}><${Icon} name="external" /></a>`}
+          <div class="h-only-sm"><${SupportButton} t=${t} unread=${support.unread} onClick=${() => setSupportOpen(true)} compact /></div>
           <div class="h-only-sm"><${AccountMenu} email=${session.user.email}>${account}</${AccountMenu}></div>
         </div>
       </header>
@@ -290,6 +304,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
         ${view === 'settings' && html`<${SettingsView} api=${api} t=${t} r=${r} lang=${lang} role=${role} onSaved=${(x) => setR(x)} />`}
       </main>
     </section>
+    ${supportOpen && html`<${SupportModal} api=${api} t=${t} r=${r} support=${support} context=${supportContext} onClose=${() => setSupportOpen(false)} />`}
     <${ScreenTickets} tickets=${screenTickets} t=${t} onClose=${(id) => setScreenTickets((x) => x.filter((j) => j.id !== id))} />
     ${!shiftStarted && html`<div class="h-shift">
       <div class="h-shift-card">

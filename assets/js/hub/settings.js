@@ -1,8 +1,8 @@
 // Restaurant settings, ordering hours and team.
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610300457';
-import { DAYS } from '../core/util.js?v=202610300457';
-import { Field, Switch, attempt, toast } from './ui.js?v=202610300457';
-import { hubError } from './strings.js?v=202610300457';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610300621';
+import { DAYS } from '../core/util.js?v=202610300621';
+import { Field, Switch, attempt, toast } from './ui.js?v=202610300621';
+import { hubError } from './strings.js?v=202610300621';
 
 function HoursEditor({ t, lang, hours, onChange }) {
   const setDay = (d, ranges) => {

@@ -746,3 +746,39 @@ input.h-qr-label:hover, input.h-qr-label:focus { border-color: var(--line); outl
 .hub.is-kitchen .h-order-lines li { grid-template-columns: 30px minmax(0, 1fr) auto; }
 .hub.is-kitchen .h-order-actions .h-btn { height: 48px; padding: 0 20px; font-size: 15px; }
 .hub.is-kitchen .h-request-text { font-size: 18px; }
+
+/* ---------- Help from Farol ---------- */
+.h-support-btn { position: relative; display: flex; align-items: center; gap: 10px; width: 100%; margin: 12px 0 0; padding: 10px; border: 1px solid var(--lamp-line);
+  border-radius: 12px; background: var(--lamp-soft); color: var(--text); text-align: left; }
+.h-support-btn:hover { background: color-mix(in srgb, var(--lamp) 20%, transparent); }
+.h-support-ico { flex: none; width: 34px; height: 34px; display: grid; place-items: center; border-radius: 10px; background: var(--lamp); color: var(--lamp-ink); }
+.h-support-text { display: flex; flex-direction: column; line-height: 1.25; min-width: 0; }
+.h-support-text strong { font-size: 13.5px; }
+.h-support-text small { font-size: 12px; color: var(--text-2); }
+.h-support-dot { position: absolute; top: -6px; right: -6px; min-width: 20px; height: 20px; padding: 0 6px; border-radius: 999px; background: var(--bad); color: #fff;
+  font-size: 11px; font-weight: 700; display: grid; place-items: center; }
+.h-support-btn.is-compact { width: 34px; height: 34px; margin: 0; padding: 0; justify-content: center; border-radius: 50%; }
+.h-support-btn.is-compact .h-support-ico { width: 34px; height: 34px; border-radius: 50%; }
+.h-support-topics { margin: 12px 0; }
+.h-support-msg { min-height: 110px; }
+.h-support-urgent { display: flex; flex-direction: column; gap: 4px; margin: 12px 0 4px; }
+.h-support-h { margin: 22px 0 8px; font-size: 13px; font-weight: 600; color: var(--text-2); }
+.h-support-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.h-support-list li { padding: 12px; border: 1px solid var(--line); border-radius: 12px; background: var(--raised); }
+.h-support-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; }
+.h-support-text-msg { margin: 8px 0 0; white-space: pre-wrap; }
+.h-support-reply { margin-top: 10px; padding: 10px 12px; border-radius: 10px; background: var(--lamp-soft); border-left: 3px solid var(--lamp); }
+.h-support-reply strong { font-size: 12px; color: var(--lamp); }
+.h-support-reply p { margin: 2px 0 0; white-space: pre-wrap; }
+.h-tag.is-bad { color: var(--bad); border-color: var(--bad); }
+/* admin inbox */
+.h-inbox { display: grid; gap: 10px; }
+.h-inbox-item { padding: 14px 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--raised); }
+.h-inbox-item.is-urgent { border-color: var(--bad); box-shadow: 0 0 0 1px var(--bad); }
+.h-inbox-item.is-resolved { opacity: .6; }
+.h-inbox-head { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.h-inbox-head strong { font-size: 15px; }
+.h-inbox-msg { margin: 8px 0; white-space: pre-wrap; }
+.h-inbox-reply { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; }
+.h-inbox-reply textarea { flex: 1; min-height: 38px; }
+.h-count-pill { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 7px; margin-left: 8px; border-radius: 999px; background: var(--bad); color: #fff; font-size: 12px; font-weight: 700; }

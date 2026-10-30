@@ -1,5 +1,5 @@
 // New-order alerts: a repeating chime and a flashing tab title until someone reacts.
-import { useEffect, useRef } from '../vendor/preact-htm.js?v=202610300457';
+import { useEffect, useRef } from '../vendor/preact-htm.js?v=202610300621';
 
 let ctx = null;
 export function unlockAudio() {

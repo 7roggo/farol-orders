@@ -1,12 +1,13 @@
 // Farol master admin: create restaurant hubs, invite owners, switch hubs on/off, see activity.
-import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610300457';
-import { money, slugify } from '../core/util.js?v=202610300457';
-import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610300457';
-import { siteBase } from '../api/index.js?v=202610300457';
-import { Mark, Icon } from '../hub/icons.js?v=202610300457';
-import { ThemeButton, Login } from '../hub/app.js?v=202610300457';
-import { HS } from '../hub/strings.js?v=202610300457';
-import { store } from '../core/util.js?v=202610300457';
+import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610300621';
+import { money, slugify } from '../core/util.js?v=202610300621';
+import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610300621';
+import { siteBase } from '../api/index.js?v=202610300621';
+import { Mark, Icon } from '../hub/icons.js?v=202610300621';
+import { ThemeButton, Login } from '../hub/app.js?v=202610300621';
+import { HS } from '../hub/strings.js?v=202610300621';
+import { store } from '../core/util.js?v=202610300621';
+import { chime, unlockAudio } from '../hub/alerts.js?v=202610300621';
 
 const msg = (e) => ({ not_allowed: 'This account is not a Farol admin.', duplicate_slug: 'That web address is already taken.' }[e.code]
   || (/duplicate key|unique/i.test(e.message) ? 'That web address is already taken.' : e.message || 'Something went wrong.'));
@@ -41,6 +42,56 @@ function NewRestaurant({ api, onCreated }) {
   </form>`;
 }
 
+const TOPIC = { orders: 'Orders', printer: 'Printer', menu: 'Menu', other: 'Other' };
+const ago = (iso) => { const m = Math.floor((Date.now() - new Date(iso)) / 60000); return m < 1 ? 'now' : m < 60 ? `${m} min ago` : m < 1440 ? `${Math.floor(m / 60)} h ago` : new Date(iso).toLocaleDateString('en-GB'); };
+
+// Live inbox of "Help from Farol" requests: chime + tab title on new ones, reply and solve inline.
+function SupportInbox({ api }) {
+  const [items, setItems] = useState(null);
+  const [drafts, setDrafts] = useState({});
+  const [showCtx, setShowCtx] = useState(null);
+  const load = () => api.adminSupportList(false).then(setItems).catch(() => setItems([]));
+  useEffect(() => {
+    load();
+    const off = api.adminSubscribeSupport((type) => { if (type === 'INSERT') chime('order'); load(); });
+    const poll = setInterval(load, 60000);
+    return () => { off(); clearInterval(poll); };
+  }, []);
+  const open = (items || []).filter((x) => x.status === 'open');
+  useEffect(() => { document.title = open.length ? `(${open.length}) Help requests · Farol admin` : 'Farol admin'; }, [open.length]);
+  const update = async (x, resolve) => {
+    await attempt(() => api.adminSupportUpdate(x.id, drafts[x.id] || '', resolve), msg);
+    setDrafts({ ...drafts, [x.id]: '' }); load();
+  };
+  return html`<section class="h-panel" onClick=${unlockAudio}>
+    <div class="h-panel-head"><h2>Help requests${open.length > 0 && html`<span class="h-count-pill">${open.length}</span>`}</h2>
+      <span class="h-muted h-small">New requests chime here live. Click anywhere on this page once to allow the sound.</span></div>
+    ${!items ? html`<p class="h-muted">…</p>` : !items.length ? html`<p class="h-empty">No help requests. All quiet.</p>` : html`<div class="h-inbox">
+      ${items.map((x) => html`<article class="h-inbox-item ${x.urgent && x.status === 'open' ? 'is-urgent' : ''} is-${x.status}">
+        <div class="h-inbox-head">
+          <strong>${x.restaurant}</strong>
+          <span class="h-tag">${TOPIC[x.topic] || x.topic}</span>
+          ${x.urgent && html`<span class="h-tag is-bad">Urgent</span>`}
+          <span class="h-badge ${x.status === 'open' ? 'is-warn' : 'is-go'}">${x.status === 'open' ? 'Open' : 'Solved'}</span>
+          <span class="h-muted h-small">${x.created_email} · ${ago(x.created_at)}</span>
+          <span class="h-grow"></span>
+          <a class="h-link" href=${`hub.html?r=${x.slug}${api.mode === 'demo' ? '&demo' : ''}`}>Open their hub</a>
+        </div>
+        <p class="h-inbox-msg">${x.message}</p>
+        ${x.reply && html`<div class="h-support-reply"><strong>Your reply</strong><p>${x.reply}</p></div>`}
+        <button class="h-link" onClick=${() => setShowCtx(showCtx === x.id ? null : x.id)}>${showCtx === x.id ? 'Hide details' : 'Show screen details'}</button>
+        ${showCtx === x.id && html`<pre class="h-copy"><code>${JSON.stringify(x.context, null, 2)}</code></pre>`}
+        ${x.status === 'open' && html`<div class="h-inbox-reply">
+          <textarea class="h-input" rows="2" placeholder="Reply (they see it in their hub)" value=${drafts[x.id] || ''}
+            onInput=${(e) => setDrafts({ ...drafts, [x.id]: e.target.value })}></textarea>
+          <button class="h-btn h-btn-ghost" disabled=${!(drafts[x.id] || '').trim()} onClick=${() => update(x, false)}>Reply</button>
+          <button class="h-btn h-btn-primary" onClick=${() => update(x, true)}><${Icon} name="check" size=${16} />${(drafts[x.id] || '').trim() ? 'Reply & solve' : 'Mark solved'}</button>
+        </div>`}
+      </article>`)}
+    </div>`}
+  </section>`;
+}
+
 function Admin({ api, session, theme, setTheme }) {
   const [rows, setRows] = useState(null);
   const [denied, setDenied] = useState(false);
@@ -66,6 +117,7 @@ function Admin({ api, session, theme, setTheme }) {
         <div class="h-kpi"><span class="h-kpi-value">${total.reduce((s, r) => s + r.orders_30d, 0)}</span><span class="h-kpi-label">Orders, last 30 days</span></div>
         <div class="h-kpi"><span class="h-kpi-value">${money(total.reduce((s, r) => s + r.revenue_30d_cents, 0))}</span><span class="h-kpi-label">Ordered through Farol, 30 days</span></div>
       </div>
+      <${SupportInbox} api=${api} />
       <${NewRestaurant} api=${api} onCreated=${load} />
       <section class="h-panel">
         <h2>Restaurants</h2>
