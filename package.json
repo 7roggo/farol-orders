@@ -1,0 +1,15 @@
+{
+  "name": "farol-orders",
+  "private": true,
+  "type": "module",
+  "description": "QR table ordering hub for restaurants: customer menu, restaurant hub, Farol admin, kitchen ticket printing.",
+  "scripts": {
+    "test": "node tests/db.test.mjs",
+    "test:printers": "deno run -A --import-map=tests/import_map.json tests/printers.test.ts",
+    "build:seed": "node tools/build-seed.mjs && node tools/build-setup.mjs",
+    "serve": "python3 -m http.server 8080"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "^0.5.13"
+  }
+}

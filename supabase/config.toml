@@ -1,0 +1,12 @@
+# Used by the Supabase CLI when deploying the functions.
+# Printers can't log in, so the two printer endpoints skip the login check
+# (each printer is identified by its own secret key in the URL instead).
+
+[functions.cloudprnt]
+verify_jwt = false
+
+[functions.epson-print]
+verify_jwt = false
+
+[functions.translate]
+verify_jwt = true
