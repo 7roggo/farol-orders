@@ -1,13 +1,13 @@
 // Farol master admin: create restaurant hubs, invite owners, switch hubs on/off, see activity.
-import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610301041';
-import { money, slugify } from '../core/util.js?v=202610301041';
-import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610301041';
-import { siteBase } from '../api/index.js?v=202610301041';
-import { Mark, Icon, Logo } from '../hub/icons.js?v=202610301041';
-import { ThemeButton, Login } from '../hub/app.js?v=202610301041';
-import { HS } from '../hub/strings.js?v=202610301041';
-import { store } from '../core/util.js?v=202610301041';
-import { chime, unlockAudio } from '../hub/alerts.js?v=202610301041';
+import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610301053';
+import { money, slugify } from '../core/util.js?v=202610301053';
+import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610301053';
+import { siteBase } from '../api/index.js?v=202610301053';
+import { Mark, Icon, Logo } from '../hub/icons.js?v=202610301053';
+import { ThemeButton, Login } from '../hub/app.js?v=202610301053';
+import { HS } from '../hub/strings.js?v=202610301053';
+import { store } from '../core/util.js?v=202610301053';
+import { chime, unlockAudio } from '../hub/alerts.js?v=202610301053';
 
 const msg = (e) => ({ not_allowed: 'This account is not a Farol admin.', duplicate_slug: 'That web address is already taken.' }[e.code]
   || (/duplicate key|unique/i.test(e.message) ? 'That web address is already taken.' : e.message || 'Something went wrong.'));

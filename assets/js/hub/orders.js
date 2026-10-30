@@ -1,9 +1,9 @@
 // Live order board: new → preparing → ready, plus table calls (waiter / bill).
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301041';
-import { money, minutesAgo, clockTime } from '../core/util.js?v=202610301041';
-import { Modal, attempt, toast } from './ui.js?v=202610301041';
-import { hubError } from './strings.js?v=202610301041';
-import { Icon } from './icons.js?v=202610301041';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301053';
+import { money, minutesAgo, clockTime } from '../core/util.js?v=202610301053';
+import { Modal, attempt, toast } from './ui.js?v=202610301053';
+import { hubError } from './strings.js?v=202610301053';
+import { Icon } from './icons.js?v=202610301053';
 
 function useTick(ms = 30000) {
   const [, set] = useState(0);

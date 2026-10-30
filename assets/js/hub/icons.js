@@ -1,6 +1,6 @@
 // Line icons for the hub (24×24 grid, 1.75 stroke, drawn in currentColor).
-import { html } from '../vendor/preact-htm.js?v=202610301041';
-import { Logo, LogoMark } from '../core/logo.js?v=202610301041';
+import { html } from '../vendor/preact-htm.js?v=202610301053';
+import { Logo, LogoMark } from '../core/logo.js?v=202610301053';
 export { Logo };
 
 const P = {

@@ -1,19 +1,19 @@
 // Restaurant hub: login, live orders, menu, tables & QR, printers, sales, settings.
-import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610301041';
-import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610301041';
-import { HS, hubError } from './strings.js?v=202610301041';
-import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610301041';
-import { useAlerts, unlockAudio } from './alerts.js?v=202610301041';
-import { usePrintEngine, getDevice } from './printing.js?v=202610301041';
-import { OrdersView } from './orders.js?v=202610301041';
-import { MenuView } from './menu.js?v=202610301041';
-import { TablesView } from './tables.js?v=202610301041';
-import { PrintersView } from './printers.js?v=202610301041';
-import { StatsView } from './stats.js?v=202610301041';
-import { SettingsView } from './settings.js?v=202610301041';
-import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610301041';
-import { Icon, Mark, Logo } from './icons.js?v=202610301041';
-import { useSupport, SupportButton, SupportModal } from './support.js?v=202610301041';
+import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610301053';
+import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610301053';
+import { HS, hubError } from './strings.js?v=202610301053';
+import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610301053';
+import { useAlerts, unlockAudio } from './alerts.js?v=202610301053';
+import { usePrintEngine, getDevice } from './printing.js?v=202610301053';
+import { OrdersView } from './orders.js?v=202610301053';
+import { MenuView } from './menu.js?v=202610301053';
+import { TablesView } from './tables.js?v=202610301053';
+import { PrintersView } from './printers.js?v=202610301053';
+import { StatsView } from './stats.js?v=202610301053';
+import { SettingsView } from './settings.js?v=202610301053';
+import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610301053';
+import { Icon, Mark, Logo } from './icons.js?v=202610301053';
+import { useSupport, SupportButton, SupportModal } from './support.js?v=202610301053';
 
 const NAV = ['orders', 'menu', 'tables', 'printers', 'stats', 'settings'];
 
@@ -78,6 +78,7 @@ function AccountMenu({ email, children }) {
     ${open && html`<div class="h-menu-pop is-right" role="menu">
       <p class="h-menu-pop-title">${email}</p>
       <div class="h-menu-pop-row">${children}</div>
+      <a class="h-menu-pop-link" href="privacy.html" target="_blank" rel="noopener">${document.documentElement.lang === 'en' ? 'Privacy policy' : 'Política de privacidad'}</a>
     </div>`}
   </div>`;
 }
@@ -269,6 +270,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
       <div class="h-side-foot">
         <span class="h-side-user" title=${session.user.email}>${session.user.email}</span>
         <div class="h-side-tools">${account}</div>
+        <a class="h-side-privacy" href="privacy.html" target="_blank" rel="noopener">${lang === 'en' ? 'Privacy policy' : 'Política de privacidad'}</a>
       </div>
     </aside>
     <section class="h-body">
