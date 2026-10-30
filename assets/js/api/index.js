@@ -1,6 +1,6 @@
 // Picks the backend: your Supabase project when config.js is filled in, otherwise the in-browser demo.
-import { createSupabaseApi } from './supabase-api.js?v=202610300621';
-import { createDemoApi } from './demo-api.js?v=202610300621';
+import { createSupabaseApi } from './supabase-api.js?v=202610301029';
+import { createDemoApi } from './demo-api.js?v=202610301029';
 
 let instance = null;
 export function getApi() {

@@ -1,8 +1,8 @@
 // Demo backend: the whole platform running inside the browser, no Supabase needed.
 // Same functions as supabase-api.js, same rules as the database. Data is kept in this
 // browser only (and shared between tabs of the same browser).
-import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js?v=202610300621';
-import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js?v=202610300621';
+import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js?v=202610301029';
+import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js?v=202610301029';
 
 const KEY = 'farol-demo-db-v3';
 const now = () => new Date().toISOString();
@@ -17,7 +17,7 @@ function seed() {
       default_lang: 'es', welcome_es: 'Tapas caseras y la tortilla de la abuela Lola. Pide desde la mesa y te lo llevamos.',
       welcome_en: "Homemade tapas and grandma Lola's tortilla. Order from your table and we'll bring it over.", logo_url: null,
       cover_url: SAMPLE_COVER, menu_theme: 'tasca', accent_color: '#C8553D',
-      google_review_url: 'https://www.google.com/maps', hours_enabled: false,
+      google_review_url: 'https://www.google.com/maps', privacy_url: null, hours_enabled: false,
       hours: { 2: [['12:30', '16:30'], ['20:00', '00:30']], 3: [['12:30', '16:30'], ['20:00', '00:30']],
         4: [['12:30', '16:30'], ['20:00', '00:30']], 5: [['12:30', '16:30'], ['20:00', '01:30']],
         6: [['12:30', '01:30']], 7: [['12:30', '17:00']] },

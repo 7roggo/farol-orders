@@ -142,6 +142,8 @@ button { cursor: pointer; }
 
 .o-foot { display: grid; justify-items: center; gap: 6px; padding: 30px 18px 10px; text-align: center; }
 .o-made { margin: 0; font-size: .82rem; color: var(--o-ink-2); }
+.o-privacy-note { margin: 6px 0 10px; line-height: 1.45; }
+.o-privacy-note a, .o-foot a.o-link { color: inherit; text-decoration: underline; text-underline-offset: 2px; }
 
 /* bottom bar */
 .o-bar { position: absolute; left: 0; right: 0; bottom: 0; z-index: 10; display: flex; gap: 10px; padding: 12px 14px calc(14px + env(safe-area-inset-bottom, 0px));
@@ -665,7 +667,7 @@ input.h-qr-label:hover, input.h-qr-label:focus { border-color: var(--line); outl
 .h-login-brand { display: flex; align-items: center; gap: 10px; }
 .h-login-brand .h-wordmark { font-size: 18px; }
 .h-login-links { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; margin-top: 16px; }
-.h-login-foot { display: flex; justify-content: flex-end; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
+.h-login-foot { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--line); }
 .h-pick { list-style: none; padding: 0; display: grid; gap: 8px; }
 .h-pick .h-btn { justify-content: flex-start; height: 44px; }
 

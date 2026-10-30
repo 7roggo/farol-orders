@@ -1,5 +1,5 @@
 // Small building blocks used across the hub.
-import { html, useEffect, useRef, useState } from '../vendor/preact-htm.js?v=202610300621';
+import { html, useEffect, useRef, useState } from '../vendor/preact-htm.js?v=202610301029';
 
 export function Modal({ title, onClose, children, footer, wide }) {
   const ref = useRef();

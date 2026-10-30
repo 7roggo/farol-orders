@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="es" translate="no">
+<head>
+<meta charset="utf-8">
+<meta name="google" content="notranslate"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacidad · Farol</title>
+<meta name="description" content="Cómo trata Farol los datos de sus clientes, de los equipos de los restaurantes y de los comensales que piden por QR.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wdth,wght@75..100,400..700&display=swap" rel="stylesheet">
+<style>
+  :root { --bg: #0F1012; --card: #15171A; --line: #272B31; --text: #ECEDEF; --text-2: #A4A9B2; --lamp: #FFB547; }
+  @media (prefers-color-scheme: light) {
+    :root { --bg: #F7F7F5; --card: #FFFFFF; --line: #E2E3E0; --text: #17181A; --text-2: #5C6168; --lamp: #B26B00; }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.65 'Instrument Sans', system-ui, sans-serif; -webkit-font-smoothing: antialiased; }
+  .wrap { width: min(760px, 100%); margin: 0 auto; padding: 28px 16px 80px; }
+  .top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .brand { display: flex; align-items: center; gap: 10px; color: var(--text); text-decoration: none; font-weight: 650; letter-spacing: -0.01em; }
+  .lang { font: inherit; font-size: 14px; font-weight: 600; color: var(--text); background: var(--card); border: 1px solid var(--line); border-radius: 999px; padding: 6px 14px; cursor: pointer; }
+  .lang:hover { border-color: var(--lamp); }
+  h1 { font-size: clamp(30px, 6vw, 40px); line-height: 1.1; letter-spacing: -0.025em; font-weight: 650; margin: 48px 0 10px; }
+  .lead { color: var(--text-2); margin: 0 0 8px; font-size: 17px; }
+  .updated { color: var(--text-2); font-size: 14px; margin: 0; }
+  nav.toc { margin: 28px 0 8px; padding: 16px 18px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; }
+  nav.toc ol { margin: 0; padding-left: 20px; columns: 2 220px; column-gap: 28px; font-size: 15px; }
+  nav.toc a { color: var(--text); text-decoration: none; }
+  nav.toc a:hover { color: var(--lamp); }
+  section { padding-top: 26px; scroll-margin-top: 16px; }
+  h2 { font-size: 20px; letter-spacing: -0.01em; font-weight: 650; margin: 0 0 8px; }
+  h2 .n { color: var(--lamp); font-variant-numeric: tabular-nums; margin-right: 8px; }
+  p, li { color: var(--text); }
+  ul { padding-left: 20px; margin: 8px 0; }
+  li { margin: 4px 0; }
+  .muted { color: var(--text-2); }
+  .box { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 16px 18px; margin: 12px 0; }
+  .box.lamp { border-color: color-mix(in srgb, var(--lamp) 55%, var(--line)); }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; margin: 10px 0; }
+  th, td { text-align: left; vertical-align: top; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); }
+  th { color: var(--text-2); font-weight: 600; font-size: 13px; text-transform: uppercase; letter-spacing: .04em; }
+  a { color: var(--lamp); text-underline-offset: 3px; }
+  .fill { background: color-mix(in srgb, var(--lamp) 22%, transparent); border-radius: 4px; padding: 0 4px; }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--text-2); font-size: 14px; display: flex; gap: 16px; flex-wrap: wrap; justify-content: space-between; }
+  footer a { color: var(--text-2); }
+  [hidden] { display: none !important; }
+  @media (max-width: 520px) { table, thead, tbody, tr, th, td { display: block; } thead { display: none; } tr { padding: 8px 0; border-bottom: 1px solid var(--line); } td { border: 0; padding: 2px 0; } td:first-child { font-weight: 600; } }
+</style>
+<script>
+  // Fill in once the company is set up. Anything left in [brackets] is highlighted on the page.
+  window.FAROL_OWNER = {
+    name: '[Nombre y apellidos o razón social]',
+    nif: '[NIF / CIF]',
+    address: '[Dirección completa], Madrid, España',
+    email: '[hola@tudominio.es]',
+    updated: { es: '30 de octubre de 2026', en: '30 October 2026' },
+  };
+</script>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <a class="brand" href="./">
+      <svg width="28" height="28" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="6" fill="#262A30"/><circle cx="12" cy="12" r="3.6" fill="#FFB547"/><path d="M12 3.6v2.4M12 18v2.4M3.6 12H6M18 12h2.4" stroke="#FFB547" stroke-width="1.6" stroke-linecap="round" opacity=".55"/></svg>
+      Farol
+    </a>
+    <button class="lang" id="lang" type="button" aria-label="Change language">English</button>
+  </header>
+
+  <!-- ===================== ESPAÑOL ===================== -->
+  <article lang="es" data-lang="es">
+    <h1>Política de privacidad</h1>
+    <p class="lead">Qué datos tratamos, para qué, durante cuánto tiempo y cómo puedes controlarlos. Sin letra pequeña.</p>
+    <p class="updated">Última actualización: <span data-owner="updated"></span></p>
+
+    <nav class="toc" aria-label="Índice">
+      <ol>
+        <li><a href="#es-responsable">Quiénes somos</a></li>
+        <li><a href="#es-resumen">Resumen rápido</a></li>
+        <li><a href="#es-contactos">Si nos contactas</a></li>
+        <li><a href="#es-clientes">Restaurantes clientes</a></li>
+        <li><a href="#comensales">Si pides desde la mesa (QR)</a></li>
+        <li><a href="#es-proveedores">Proveedores</a></li>
+        <li><a href="#es-cookies">Cookies y almacenamiento</a></li>
+        <li><a href="#es-seguridad">Seguridad</a></li>
+        <li><a href="#es-derechos">Tus derechos</a></li>
+        <li><a href="#es-cambios">Cambios</a></li>
+      </ol>
+    </nav>
+
+    <section id="es-responsable">
+      <h2><span class="n">01</span>Quiénes somos</h2>
+      <p>Farol diseña webs para bares y restaurantes y ofrece un sistema de pedidos desde la mesa con código QR. Responsable del tratamiento:</p>
+      <div class="box">
+        <strong data-owner="name"></strong><br>
+        NIF: <span data-owner="nif"></span><br>
+        Domicilio: <span data-owner="address"></span><br>
+        Email: <a data-owner="email" data-mail></a>
+      </div>
+      <p class="muted">No tenemos Delegado de Protección de Datos porque, por nuestro tamaño y actividad, la ley no lo exige. Para cualquier tema de privacidad escribe al email de arriba.</p>
+    </section>
+
+    <section id="es-resumen">
+      <h2><span class="n">02</span>Resumen rápido</h2>
+      <ul>
+        <li>Solo pedimos lo necesario. Para pedir desde la mesa no hace falta registrarse, ni dar email o teléfono, ni pagar en línea.</li>
+        <li>No vendemos datos, no hacemos publicidad y no usamos cookies de seguimiento.</li>
+        <li>Cada restaurante solo ve sus propios pedidos.</li>
+        <li>El nombre y las notas de un pedido se borran automáticamente a los 30 días.</li>
+      </ul>
+    </section>
+
+    <section id="es-contactos">
+      <h2><span class="n">03</span>Si visitas nuestra web o nos contactas</h2>
+      <table>
+        <thead><tr><th>Qué</th><th>Detalle</th></tr></thead>
+        <tbody>
+          <tr><td>Datos</td><td>Los que nos des al escribirnos por formulario, email, WhatsApp, teléfono o en persona: nombre, nombre del negocio, email, teléfono y tu mensaje.</td></tr>
+          <tr><td>Para qué</td><td>Responderte, enseñarte una demo y prepararte un presupuesto.</td></tr>
+          <tr><td>Base legal</td><td>Aplicar medidas precontractuales a petición tuya (art. 6.1.b RGPD) y nuestro interés legítimo en responder a quien nos escribe (art. 6.1.f).</td></tr>
+          <tr><td>Cuánto tiempo</td><td>Hasta 12 meses desde el último contacto si no llegas a ser cliente. Si lo eres, pasa a aplicarse el punto 04.</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">No enviamos publicidad por email sin tu permiso.</p>
+    </section>
+
+    <section id="es-clientes">
+      <h2><span class="n">04</span>Restaurantes clientes y su equipo</h2>
+      <table>
+        <thead><tr><th>Qué</th><th>Detalle</th></tr></thead>
+        <tbody>
+          <tr><td>Datos</td><td>Email y contraseña de cada persona con acceso al hub (la contraseña se guarda cifrada y nadie de Farol puede verla), su rol, datos del restaurante y de facturación, y las solicitudes enviadas con el botón «Ayuda de Farol». Estas incluyen tu mensaje y datos técnicos para resolver el problema: pantalla abierta, conexión, tipo de navegador y estado de las impresoras.</td></tr>
+          <tr><td>Para qué</td><td>Dar acceso al hub, prestar el servicio contratado, darte soporte y facturar.</td></tr>
+          <tr><td>Base legal</td><td>El contrato con el restaurante (art. 6.1.b RGPD) y nuestras obligaciones contables y fiscales (art. 6.1.c).</td></tr>
+          <tr><td>Cuánto tiempo</td><td>Mientras dure el servicio. Después, solo lo que exige la ley; por ejemplo, las facturas durante 6 años. Las solicitudes de ayuda resueltas se borran a los 24 meses.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="comensales">
+      <h2><span class="n">05</span>Si pides desde la mesa con el código QR</h2>
+      <div class="box lamp">
+        <strong>Responsable de tus datos: el restaurante donde estás.</strong> Farol solo presta la herramienta y trata los datos por encargo del restaurante, siguiendo sus instrucciones (art. 28 RGPD). El restaurante puede enlazar su propia política de privacidad desde la carta.
+      </div>
+      <table>
+        <thead><tr><th>Qué</th><th>Detalle</th></tr></thead>
+        <tbody>
+          <tr><td>Datos</td><td>Mesa, platos, opciones elegidas, notas, idioma, hora del pedido y, si quieres, tu nombre (es opcional). También los avisos al camarero («llamar al camarero» y «pedir la cuenta»).</td></tr>
+          <tr><td>Lo que no pedimos</td><td>No pedimos registro, email ni teléfono, y no hay pago en línea: pagas en el local, como siempre.</td></tr>
+          <tr><td>Para qué</td><td>Enviar tu pedido a cocina y barra, imprimir el ticket, enseñarte en qué estado está y que el restaurante vea sus ventas (sin nombres).</td></tr>
+          <tr><td>Base legal</td><td>Preparar y servir lo que pides (art. 6.1.b RGPD).</td></tr>
+          <tr><td>Cuánto tiempo</td><td>Nombre y notas: <strong>30 días</strong>, luego se borran automáticamente. Tickets impresos y avisos al camarero: 30 días. El pedido, ya sin datos personales, se guarda 24 meses para las estadísticas de ventas del restaurante.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Alergias e intolerancias:</strong> si escribes una alergia en las notas, es un dato de salud. Solo se usa para preparar tu plato con seguridad, con tu consentimiento explícito al escribirla (art. 9.2.a RGPD), y se borra a los 30 días con el resto de notas. Avisa también al camarero. La información de alérgenos de la carta la proporciona el restaurante.</p>
+      <p class="muted">Para ejercer tus derechos sobre un pedido, contacta con el restaurante. Si nos escribes a nosotros, se lo trasladamos y le ayudamos a responderte.</p>
+    </section>
+
+    <section id="es-proveedores">
+      <h2><span class="n">06</span>Proveedores que nos ayudan</h2>
+      <p>No vendemos ni cedemos datos a nadie. Usamos estos proveedores, que solo tratan datos para darnos su servicio:</p>
+      <ul>
+        <li><strong>Supabase</strong>: base de datos e inicio de sesión del sistema de pedidos.</li>
+        <li><strong>GitHub</strong> (Microsoft): alojamiento del sistema de pedidos. Guarda registros técnicos de las visitas, como la dirección IP, por seguridad.</li>
+        <li><strong>Lovable</strong>: creación y alojamiento de la web de Farol y de las webs de los restaurantes.</li>
+        <li><strong>Google</strong>: tipografías (Google Fonts) y, en algunas webs, mapas de Google Maps.</li>
+        <li><strong>WhatsApp</strong> (Meta), solo si eliges escribirnos por ahí.</li>
+      </ul>
+      <p class="muted">Algunos tienen servidores fuera del Espacio Económico Europeo. En ese caso, las transferencias se amparan en el Marco de Privacidad de Datos UE–EE. UU. o en cláusulas contractuales tipo aprobadas por la Comisión Europea.</p>
+    </section>
+
+    <section id="es-cookies">
+      <h2><span class="n">07</span>Cookies y almacenamiento</h2>
+      <p>No usamos cookies de publicidad ni de analítica. Solo usamos almacenamiento técnico en tu navegador, sin el cual la web no funciona:</p>
+      <ul>
+        <li>En la carta QR: tu idioma, tu carrito y los pedidos de tu visita, para que puedas seguir su estado.</li>
+        <li>En el hub: la sesión iniciada y tus preferencias (tema, idioma, impresoras de esa pantalla).</li>
+      </ul>
+      <p class="muted">Al cargar las tipografías, Google recibe tu dirección IP. Puedes borrar el almacenamiento desde los ajustes de tu navegador.</p>
+    </section>
+
+    <section id="es-seguridad">
+      <h2><span class="n">08</span>Seguridad</h2>
+      <p>Toda la conexión va cifrada (HTTPS), las contraseñas se guardan cifradas y la base de datos impide que un restaurante vea los datos de otro. No tomamos decisiones automatizadas ni hacemos perfiles sobre ti.</p>
+    </section>
+
+    <section id="es-derechos">
+      <h2><span class="n">09</span>Tus derechos</h2>
+      <p>Puedes pedir acceso a tus datos, corregirlos o borrarlos, oponerte a su uso, limitarlo, pedir una copia para llevártela (portabilidad) y retirar tu consentimiento cuando quieras. Escribe a <a data-owner="email" data-mail></a> indicando qué necesitas. Te respondemos en un mes como máximo.</p>
+      <p>Si crees que no hemos tratado bien tus datos, puedes reclamar ante la Agencia Española de Protección de Datos: <a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>.</p>
+    </section>
+
+    <section id="es-cambios">
+      <h2><span class="n">10</span>Cambios</h2>
+      <p>Si cambiamos esta política, actualizaremos la fecha de arriba. Si el cambio es importante, avisaremos a los restaurantes clientes por email.</p>
+    </section>
+  </article>
+
+  <!-- ===================== ENGLISH ===================== -->
+  <article lang="en" data-lang="en" hidden>
+    <h1>Privacy policy</h1>
+    <p class="lead">What data we handle, why, for how long, and how you stay in control. No small print.</p>
+    <p class="updated">Last updated: <span data-owner="updated"></span></p>
+
+    <nav class="toc" aria-label="Contents">
+      <ol>
+        <li><a href="#en-who">Who we are</a></li>
+        <li><a href="#en-summary">Quick summary</a></li>
+        <li><a href="#en-contacts">If you contact us</a></li>
+        <li><a href="#en-clients">Restaurant clients</a></li>
+        <li><a href="#diners">If you order at the table (QR)</a></li>
+        <li><a href="#en-providers">Providers</a></li>
+        <li><a href="#en-cookies">Cookies and storage</a></li>
+        <li><a href="#en-security">Security</a></li>
+        <li><a href="#en-rights">Your rights</a></li>
+        <li><a href="#en-changes">Changes</a></li>
+      </ol>
+    </nav>
+
+    <section id="en-who">
+      <h2><span class="n">01</span>Who we are</h2>
+      <p>Farol builds websites for bars and restaurants and runs a QR ordering system for ordering at the table. Data controller:</p>
+      <div class="box">
+        <strong data-owner="name"></strong><br>
+        Tax ID (NIF): <span data-owner="nif"></span><br>
+        Address: <span data-owner="address"></span><br>
+        Email: <a data-owner="email" data-mail></a>
+      </div>
+      <p class="muted">We have no Data Protection Officer because, given our size and activity, the law doesn't require one. For anything privacy-related, write to the email above.</p>
+    </section>
+
+    <section id="en-summary">
+      <h2><span class="n">02</span>Quick summary</h2>
+      <ul>
+        <li>We only ask for what's needed. Ordering at the table needs no account, no email or phone number, and no online payment.</li>
+        <li>We don't sell data, don't advertise and don't use tracking cookies.</li>
+        <li>Each restaurant only sees its own orders.</li>
+        <li>The name and notes on an order are deleted automatically after 30 days.</li>
+      </ul>
+    </section>
+
+    <section id="en-contacts">
+      <h2><span class="n">03</span>If you visit our website or contact us</h2>
+      <table>
+        <thead><tr><th>What</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Data</td><td>Whatever you give us when you contact us by form, email, WhatsApp, phone or in person: name, business name, email, phone and your message.</td></tr>
+          <tr><td>Why</td><td>To reply, show you a demo and prepare a quote.</td></tr>
+          <tr><td>Legal basis</td><td>Steps taken at your request before a contract (Art. 6(1)(b) GDPR) and our legitimate interest in replying to people who write to us (Art. 6(1)(f)).</td></tr>
+          <tr><td>How long</td><td>Up to 12 months after our last contact if you don't become a client. If you do, section 04 applies.</td></tr>
+        </tbody>
+      </table>
+      <p class="muted">We never send marketing emails without your permission.</p>
+    </section>
+
+    <section id="en-clients">
+      <h2><span class="n">04</span>Restaurant clients and their staff</h2>
+      <table>
+        <thead><tr><th>What</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Data</td><td>The email and password of each person with hub access (the password is stored encrypted and no one at Farol can see it), their role, restaurant and billing details, and requests sent with the "Help from Farol" button. These include your message and technical details for fixing the problem: which screen was open, connection, browser type and printer status.</td></tr>
+          <tr><td>Why</td><td>To give access to the hub, provide the service, support you and invoice.</td></tr>
+          <tr><td>Legal basis</td><td>Our contract with the restaurant (Art. 6(1)(b) GDPR) and our accounting and tax obligations (Art. 6(1)(c)).</td></tr>
+          <tr><td>How long</td><td>For as long as the service runs. After that, only what the law requires; for example, invoices for 6 years. Solved help requests are deleted after 24 months.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="diners">
+      <h2><span class="n">05</span>If you order at the table with the QR code</h2>
+      <div class="box lamp">
+        <strong>The controller of your data is the restaurant you're in.</strong> Farol only provides the tool and processes the data on the restaurant's behalf, following its instructions (Art. 28 GDPR). The restaurant can link its own privacy policy from the menu.
+      </div>
+      <table>
+        <thead><tr><th>What</th><th>Details</th></tr></thead>
+        <tbody>
+          <tr><td>Data</td><td>Table, dishes, chosen options, notes, language, order time and, if you want, your name (it's optional). Also requests to your waiter ("call the waiter" and "ask for the bill").</td></tr>
+          <tr><td>What we don't ask for</td><td>No account, no email or phone number, and no online payment: you pay at the restaurant as usual.</td></tr>
+          <tr><td>Why</td><td>To send your order to the kitchen and bar, print the ticket, show you its status and let the restaurant see its sales (without names).</td></tr>
+          <tr><td>Legal basis</td><td>Preparing and serving what you order (Art. 6(1)(b) GDPR).</td></tr>
+          <tr><td>How long</td><td>Name and notes: <strong>30 days</strong>, then deleted automatically. Printed tickets and waiter requests: 30 days. The order itself, with no personal data left, is kept for 24 months for the restaurant's sales stats.</td></tr>
+        </tbody>
+      </table>
+      <p><strong>Allergies and intolerances:</strong> an allergy written in the notes is health data. It's used only to prepare your dish safely, with the explicit consent you give by writing it (Art. 9(2)(a) GDPR), and it's deleted after 30 days with the other notes. Please also tell your waiter. The allergen information on the menu is provided by the restaurant.</p>
+      <p class="muted">To exercise your rights over an order, contact the restaurant. If you write to us instead, we'll pass it on and help them reply to you.</p>
+    </section>
+
+    <section id="en-providers">
+      <h2><span class="n">06</span>Providers that help us</h2>
+      <p>We never sell or hand over data. We use these providers, which only process data to deliver their service to us:</p>
+      <ul>
+        <li><strong>Supabase</strong>: database and login for the ordering system.</li>
+        <li><strong>GitHub</strong> (Microsoft): hosting for the ordering system. Keeps technical visit logs, such as IP addresses, for security.</li>
+        <li><strong>Lovable</strong>: builds and hosts the Farol website and the restaurants' websites.</li>
+        <li><strong>Google</strong>: fonts (Google Fonts) and, on some websites, Google Maps.</li>
+        <li><strong>WhatsApp</strong> (Meta), only if you choose to message us there.</li>
+      </ul>
+      <p class="muted">Some of them have servers outside the European Economic Area. In that case, transfers are covered by the EU–US Data Privacy Framework or by standard contractual clauses approved by the European Commission.</p>
+    </section>
+
+    <section id="en-cookies">
+      <h2><span class="n">07</span>Cookies and storage</h2>
+      <p>We use no advertising or analytics cookies. We only use technical storage in your browser that the site needs to work:</p>
+      <ul>
+        <li>On the QR menu: your language, your basket and the orders from your visit, so you can follow their status.</li>
+        <li>In the hub: your login session and preferences (theme, language, which printers that screen uses).</li>
+      </ul>
+      <p class="muted">When the fonts load, Google receives your IP address. You can clear this storage in your browser settings.</p>
+    </section>
+
+    <section id="en-security">
+      <h2><span class="n">08</span>Security</h2>
+      <p>Every connection is encrypted (HTTPS), passwords are stored encrypted, and the database stops one restaurant from seeing another's data. We make no automated decisions and build no profiles about you.</p>
+    </section>
+
+    <section id="en-rights">
+      <h2><span class="n">09</span>Your rights</h2>
+      <p>You can ask to access, correct or delete your data, object to or restrict its use, get a copy to take elsewhere (portability) and withdraw consent at any time. Write to <a data-owner="email" data-mail></a> saying what you need. We reply within one month at most.</p>
+      <p>If you think we haven't handled your data properly, you can complain to the Spanish Data Protection Agency: <a href="https://www.aepd.es" target="_blank" rel="noopener">www.aepd.es</a>.</p>
+    </section>
+
+    <section id="en-changes">
+      <h2><span class="n">10</span>Changes</h2>
+      <p>If we change this policy, we'll update the date at the top. If the change is significant, we'll email our restaurant clients.</p>
+    </section>
+  </article>
+
+  <footer>
+    <span>© <span id="year"></span> Farol</span>
+    <a href="./">farol</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var O = window.FAROL_OWNER;
+  var params = new URLSearchParams(location.search);
+  var saved = null; try { saved = localStorage.getItem('farol-lang'); } catch (e) {}
+  var hash = location.hash.replace('#', '');
+  var lang = params.get('lang') || (hash === 'diners' || hash.indexOf('en-') === 0 ? 'en' : null)
+    || (saved ? saved.replace(/"/g, '') : null) || ((navigator.language || 'es').slice(0, 2) === 'es' ? 'es' : 'en');
+  if (lang !== 'es' && lang !== 'en') lang = 'es';
+  var btn = document.getElementById('lang');
+
+  function fillOwner() {
+    document.querySelectorAll('[data-owner]').forEach(function (el) {
+      var k = el.getAttribute('data-owner');
+      var v = k === 'updated' ? O.updated[el.closest('[data-lang]').dataset.lang] : O[k];
+      el.textContent = v;
+      el.classList.toggle('fill', /^\[/.test(v));
+      if (el.hasAttribute('data-mail') && !/^\[/.test(v)) el.href = 'mailto:' + v;
+    });
+  }
+  function show(l) {
+    lang = l;
+    document.documentElement.lang = l;
+    document.querySelectorAll('article[data-lang]').forEach(function (a) { a.hidden = a.dataset.lang !== l; });
+    btn.textContent = l === 'es' ? 'English' : 'Español';
+    document.title = (l === 'es' ? 'Privacidad' : 'Privacy') + ' · Farol';
+  }
+  btn.addEventListener('click', function () {
+    var next = lang === 'es' ? 'en' : 'es';
+    show(next);
+    try { localStorage.setItem('farol-lang', JSON.stringify(next)); } catch (e) {}
+    var map = { comensales: 'diners', diners: 'comensales' };
+    var h = location.hash.replace('#', '');
+    if (map[h]) history.replaceState(null, '', '#' + map[h]);
+  });
+  document.getElementById('year').textContent = new Date().getFullYear();
+  fillOwner();
+  show(lang);
+  var twin = { comensales: 'diners', diners: 'comensales' };
+  if (twin[hash] && (hash === 'diners') !== (lang === 'en')) { hash = twin[hash]; history.replaceState(null, '', '#' + hash); }
+  if (hash) { var t = document.getElementById(hash); if (t) setTimeout(function () { t.scrollIntoView(); }, 0); }
+})();
+</script>
+</body>
+</html>

@@ -48,6 +48,7 @@ const look = await q1(`select r.cover_url, r.menu_theme, (select count(*)::int f
   (select count(*)::int from items where restaurant_id=r.id and featured) feats from restaurants r where r.id=$1`, [rid]);
 ok(look.cover_url && look.menu_theme === 'tasca' && look.photos === 9 && look.feats === 4, `menu look: ${JSON.stringify(look)}`);
 await db.exec(readFileSync(new URL('../supabase/updates/update-01-menu-photos.sql', import.meta.url), 'utf8'));
+await db.exec(readFileSync(new URL('../supabase/updates/update-03-privacy.sql', import.meta.url), 'utf8'));  // updates run in order
 ok((await q1(`select accent_color from restaurants where id=$1`, [rid])).accent_color === '#C8553D', 'update file runs on an existing database (twice) and brands Casa Lola');
 ok((await q1(`select role from restaurant_members where user_id=$1`, [owner])).role === 'owner', 'existing user added directly as owner');
 
@@ -185,6 +186,25 @@ await db.exec(`reset role`);
 await as(null);
 await db.exec(`set role anon`);
 ok((await db.query(`select id from orders`)).rows.length === 0, 'anonymous sees no orders');
+await db.exec(`reset role`);
+
+console.log('Privacy clean-up');
+await as(null);
+const pm = (await q1(`select public.get_public_menu($1) m`, [tok])).m;
+ok('privacy_url' in pm.restaurant, 'public menu exposes the restaurant privacy link');
+await db.query(`update orders set created_at = now() - interval '40 days' where id = $1`, [placed.order_id]);
+await db.query(`update print_jobs set created_at = now() - interval '40 days' where order_id = $1`, [placed.order_id]);
+const res = (await q1(`select public.purge_old_order_data() r`)).r;
+const old = await q1(`select customer_name, note, lines, total_cents from orders where id = $1`, [placed.order_id]);
+ok(old.customer_name === '' && old.note === '' && old.lines.every((l) => l.note === '') && old.total_cents > 0, 'after 30 days name and notes are wiped, sales numbers kept');
+ok((await q1(`select count(*)::int n from print_jobs where order_id = $1`, [placed.order_id])).n === 0, 'old printed tickets deleted');
+ok(res.orders_cleaned === 1 && (await q1(`select public.purge_old_order_data() r`)).r.orders_cleaned === 0, 'clean-up does not repeat work');
+await db.query(`update orders set created_at = now() - interval '25 months' where id = $1`, [placed.order_id]);
+await db.query(`select public.purge_old_order_data()`);
+ok(!(await q1(`select 1 x from orders where id = $1`, [placed.order_id])), 'orders older than 24 months deleted');
+await as(staff);
+await db.exec(`set role authenticated`);
+await expectErr(`select public.purge_old_order_data()`, [], 'permission denied', 'staff cannot run the clean-up');
 await db.exec(`reset role`);
 
 console.log(fails ? `\n${fails} FAILED` : '\nAll database tests passed');

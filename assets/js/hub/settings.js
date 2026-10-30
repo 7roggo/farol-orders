@@ -1,8 +1,8 @@
 // Restaurant settings, ordering hours and team.
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610300621';
-import { DAYS } from '../core/util.js?v=202610300621';
-import { Field, Switch, attempt, toast } from './ui.js?v=202610300621';
-import { hubError } from './strings.js?v=202610300621';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301029';
+import { DAYS } from '../core/util.js?v=202610301029';
+import { Field, Switch, attempt, toast } from './ui.js?v=202610301029';
+import { hubError } from './strings.js?v=202610301029';
 
 function HoursEditor({ t, lang, hours, onChange }) {
   const setDay = (d, ranges) => {
@@ -75,7 +75,7 @@ export function SettingsView({ api, t, r, lang, role, onSaved }) {
     setBusy(true);
     const patch = {
       name: f.name.trim(), welcome_es: f.welcome_es, welcome_en: f.welcome_en, accent_color: f.accent_color,
-      logo_url: f.logo_url || null, google_review_url: f.google_review_url?.trim() || null, default_lang: f.default_lang,
+      logo_url: f.logo_url || null, google_review_url: f.google_review_url?.trim() || null, privacy_url: f.privacy_url?.trim() || null, default_lang: f.default_lang,
       cover_url: f.cover_url?.trim() || null, menu_theme: f.menu_theme || 'tasca',
       hours_enabled: f.hours_enabled, hours: f.hours || {},
     };
@@ -109,6 +109,8 @@ export function SettingsView({ api, t, r, lang, role, onSaved }) {
       </div>
       <${Field} label=${t.reviewUrl} hint=${t.reviewHint}>
         <input class="h-input" type="url" placeholder="https://g.page/r/…/review" value=${f.google_review_url || ''} onInput=${(e) => set({ google_review_url: e.target.value })} /></${Field}>
+      <${Field} label=${t.privacyUrl} hint=${t.privacyHint}>
+        <input class="h-input" type="url" placeholder="https://casalola.es/privacidad" value=${f.privacy_url || ''} onInput=${(e) => set({ privacy_url: e.target.value })} /></${Field}>
     </section>
 
     <section class="h-panel">

@@ -1,19 +1,19 @@
 // Restaurant hub: login, live orders, menu, tables & QR, printers, sales, settings.
-import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300621';
-import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610300621';
-import { HS, hubError } from './strings.js?v=202610300621';
-import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610300621';
-import { useAlerts, unlockAudio } from './alerts.js?v=202610300621';
-import { usePrintEngine, getDevice } from './printing.js?v=202610300621';
-import { OrdersView } from './orders.js?v=202610300621';
-import { MenuView } from './menu.js?v=202610300621';
-import { TablesView } from './tables.js?v=202610300621';
-import { PrintersView } from './printers.js?v=202610300621';
-import { StatsView } from './stats.js?v=202610300621';
-import { SettingsView } from './settings.js?v=202610300621';
-import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610300621';
-import { Icon, Mark } from './icons.js?v=202610300621';
-import { useSupport, SupportButton, SupportModal } from './support.js?v=202610300621';
+import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610301029';
+import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610301029';
+import { HS, hubError } from './strings.js?v=202610301029';
+import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610301029';
+import { useAlerts, unlockAudio } from './alerts.js?v=202610301029';
+import { usePrintEngine, getDevice } from './printing.js?v=202610301029';
+import { OrdersView } from './orders.js?v=202610301029';
+import { MenuView } from './menu.js?v=202610301029';
+import { TablesView } from './tables.js?v=202610301029';
+import { PrintersView } from './printers.js?v=202610301029';
+import { StatsView } from './stats.js?v=202610301029';
+import { SettingsView } from './settings.js?v=202610301029';
+import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610301029';
+import { Icon, Mark } from './icons.js?v=202610301029';
+import { useSupport, SupportButton, SupportModal } from './support.js?v=202610301029';
 
 const NAV = ['orders', 'menu', 'tables', 'printers', 'stats', 'settings'];
 
@@ -65,7 +65,7 @@ export function Login({ api, t, lang, setLang, recovery, title, tag }) {
           <button type="button" class="h-link" onClick=${() => setMode('reset')}>${t.forgot}</button>`}
         ${(mode === 'signup' || mode === 'reset') && html`<button type="button" class="h-link" onClick=${() => setMode('login')}>${mode === 'signup' ? t.haveAccount : t.backToLogin}</button>`}
       </div>
-      <div class="h-login-foot"><${LangSwitch} lang=${lang} setLang=${setLang} /></div>
+      <div class="h-login-foot"><a class="h-link h-small" href="privacy.html" target="_blank" rel="noopener">${lang === 'en' ? 'Privacy' : 'Privacidad'}</a><${LangSwitch} lang=${lang} setLang=${setLang} /></div>
     </form>
   </div>`;
 }

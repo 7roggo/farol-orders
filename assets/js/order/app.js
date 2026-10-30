@@ -1,7 +1,7 @@
 // Customer ordering page: what people see after scanning the QR code on their table.
-import { html, render, useState, useEffect, useMemo, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300621';
-import { pick, money, store, allergenById, ALLERGENS, unitPrice, hoursToday, uid } from '../core/util.js?v=202610300621';
-import { S, errorText } from './strings.js?v=202610300621';
+import { html, render, useState, useEffect, useMemo, useRef, useCallback } from '../vendor/preact-htm.js?v=202610301029';
+import { pick, money, store, allergenById, ALLERGENS, unitPrice, hoursToday, uid } from '../core/util.js?v=202610301029';
+import { S, errorText } from './strings.js?v=202610301029';
 
 // Spanish phones get Spanish, any other language gets English; unknown → the restaurant's default.
 const browserLang = (fallback) => {
@@ -82,13 +82,16 @@ function ItemSheet({ item, line, lang, currency, onSave, onClose, canOrder }) {
   </${Sheet}>`;
 }
 
+// The restaurant's own privacy policy if it has one, otherwise Farol's page section for diners.
+const privacyLink = (r) => r.privacy_url || 'privacy.html#comensales';
+
 function lineSummary(item, line, lang) {
   const names = [];
   for (const g of item?.options || []) for (const c of g.choices) if (line.choices.includes(c.id)) names.push(pick(c, 'name', lang));
   return names.join(', ');
 }
 
-function CartSheet({ cart, itemsById, lang, currency, onChange, onEdit, onSend, onClose, sending, error, badItem }) {
+function CartSheet({ cart, itemsById, lang, currency, privacyHref, onChange, onEdit, onSend, onClose, sending, error, badItem }) {
   const t = S[lang];
   const [note, setNote] = useState(store.get('farol-cart-note', ''));
   const [name, setName] = useState(store.get('farol-name', ''));
@@ -125,6 +128,7 @@ function CartSheet({ cart, itemsById, lang, currency, onChange, onEdit, onSend, 
       <label class="o-field"><span>${t.yourName}</span>
         <input maxlength="40" value=${name} autocomplete="given-name"
           onInput=${(e) => { setName(e.target.value); store.set('farol-name', e.target.value); }} /></label>
+      <p class="o-muted o-small o-privacy-note">${t.privacyNote} <a href=${privacyHref} target="_blank" rel="noopener">${t.privacy}</a></p>
       ${error && html`<p class="o-error" role="alert">${error}</p>`}
       <p class="o-muted o-small">${t.payAtTable}</p>
       <button class="o-btn o-btn-primary o-wide" disabled=${sending} onClick=${() => onSend({ note, name })}>
@@ -384,6 +388,7 @@ export function OrderApp({ api, tableToken, slug }) {
       <footer class="o-foot">
         <button class="o-link" onClick=${() => setSheet({ type: 'info' })}>${t.allergens} · ${t.info}</button>
         <p class="o-made">${t.payAtTable}</p>
+        <a class="o-link o-small" href=${privacyLink(r)} target="_blank" rel="noopener">${t.privacy}</a>
       </footer>
     </main>`}
 
@@ -395,7 +400,7 @@ export function OrderApp({ api, tableToken, slug }) {
 
     ${sheet?.type === 'item' && html`<${ItemSheet} item=${sheet.item} line=${sheet.line} lang=${lang} currency=${r.currency}
       canOrder=${canOrder} onSave=${addLine} onClose=${() => setSheet(sheet.line ? { type: 'cart' } : null)} />`}
-    ${sheet?.type === 'cart' && html`<${CartSheet} cart=${cart} itemsById=${itemsById} lang=${lang} currency=${r.currency}
+    ${sheet?.type === 'cart' && html`<${CartSheet} cart=${cart} itemsById=${itemsById} lang=${lang} currency=${r.currency} privacyHref=${privacyLink(r)}
       onChange=${setCart} onEdit=${(l) => setSheet({ type: 'item', item: itemsById[l.item_id], line: l })}
       onSend=${send} onClose=${() => setSheet(null)} sending=${sending} error=${sendError} badItem=${badItem} />`}
     ${sheet?.type === 'help' && html`<${HelpSheet} api=${api} tableToken=${tableToken} lang=${lang} onClose=${() => setSheet(null)} />`}
