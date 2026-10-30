@@ -1,5 +1,5 @@
 // Live backend: talks to your Supabase project (database, logins, live updates, functions).
-import { uid, localNow } from '../core/util.js';
+import { uid, localNow } from '../core/util.js?v=202610300457';
 
 function toError(e) {
   const err = new Error(e?.message || String(e));

@@ -1,12 +1,12 @@
 // Farol master admin: create restaurant hubs, invite owners, switch hubs on/off, see activity.
-import { html, render, useState, useEffect } from '../vendor/preact-htm.js';
-import { money, slugify } from '../core/util.js';
-import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js';
-import { siteBase } from '../api/index.js';
-import { Mark, Icon } from '../hub/icons.js';
-import { ThemeButton, Login } from '../hub/app.js';
-import { HS } from '../hub/strings.js';
-import { store } from '../core/util.js';
+import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610300457';
+import { money, slugify } from '../core/util.js?v=202610300457';
+import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610300457';
+import { siteBase } from '../api/index.js?v=202610300457';
+import { Mark, Icon } from '../hub/icons.js?v=202610300457';
+import { ThemeButton, Login } from '../hub/app.js?v=202610300457';
+import { HS } from '../hub/strings.js?v=202610300457';
+import { store } from '../core/util.js?v=202610300457';
 
 const msg = (e) => ({ not_allowed: 'This account is not a Farol admin.', duplicate_slug: 'That web address is already taken.' }[e.code]
   || (/duplicate key|unique/i.test(e.message) ? 'That web address is already taken.' : e.message || 'Something went wrong.'));

@@ -1,18 +1,18 @@
 // Restaurant hub: login, live orders, menu, tables & QR, printers, sales, settings.
-import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js';
-import { store, isOpenNow, isPaused, clockTime } from '../core/util.js';
-import { HS, hubError } from './strings.js';
-import { Toasts, ConfirmHost, attempt, Field } from './ui.js';
-import { useAlerts, unlockAudio } from './alerts.js';
-import { usePrintEngine, getDevice } from './printing.js';
-import { OrdersView } from './orders.js';
-import { MenuView } from './menu.js';
-import { TablesView } from './tables.js';
-import { PrintersView } from './printers.js';
-import { StatsView } from './stats.js';
-import { SettingsView } from './settings.js';
-import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js';
-import { Icon, Mark } from './icons.js';
+import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610300457';
+import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610300457';
+import { HS, hubError } from './strings.js?v=202610300457';
+import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610300457';
+import { useAlerts, unlockAudio } from './alerts.js?v=202610300457';
+import { usePrintEngine, getDevice } from './printing.js?v=202610300457';
+import { OrdersView } from './orders.js?v=202610300457';
+import { MenuView } from './menu.js?v=202610300457';
+import { TablesView } from './tables.js?v=202610300457';
+import { PrintersView } from './printers.js?v=202610300457';
+import { StatsView } from './stats.js?v=202610300457';
+import { SettingsView } from './settings.js?v=202610300457';
+import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610300457';
+import { Icon, Mark } from './icons.js?v=202610300457';
 
 const NAV = ['orders', 'menu', 'tables', 'printers', 'stats', 'settings'];
 

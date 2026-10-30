@@ -1,8 +1,8 @@
 // Option 1 printing: this hub screen prints the tickets for the "browser" printers it is set up for.
 // With Chrome started in kiosk-printing mode the ticket prints straight away, with no dialog.
-import { useEffect, useRef, useState } from '../vendor/preact-htm.js';
-import { store } from '../core/util.js';
-import { ticketToHtmlDocument } from '../../../supabase/functions/_shared/ticket-format.js';
+import { useEffect, useRef, useState } from '../vendor/preact-htm.js?v=202610300457';
+import { store } from '../core/util.js?v=202610300457';
+import { ticketToHtmlDocument } from '../../../supabase/functions/_shared/ticket-format.js?v=202610300457';
 
 const DEVICE_KEY = 'farol-device';
 // A new screen prints nothing until someone picks its printers (so a manager's phone never
