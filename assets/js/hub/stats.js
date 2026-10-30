@@ -1,7 +1,7 @@
 // Sales: orders, revenue, average order, best sellers, busiest hours.
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301029';
-import { money, localNow } from '../core/util.js?v=202610301029';
-import { Empty } from './ui.js?v=202610301029';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301041';
+import { money, localNow } from '../core/util.js?v=202610301041';
+import { Empty } from './ui.js?v=202610301041';
 
 const PAID = ['accepted', 'ready', 'completed'];
 const shiftDate = (iso, days) => { const d = new Date(iso + 'T12:00:00Z'); d.setUTCDate(d.getUTCDate() + days); return d.toISOString().slice(0, 10); };

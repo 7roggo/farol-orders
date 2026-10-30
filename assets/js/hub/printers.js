@@ -1,10 +1,10 @@
 // Printers: set up this screen as a printer (option 1) or add a cloud printer (option 3).
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301029';
-import { minutesAgo, clockTime } from '../core/util.js?v=202610301029';
-import { Modal, Field, attempt, toast, Empty, askConfirm } from './ui.js?v=202610301029';
-import { hubError } from './strings.js?v=202610301029';
-import { setDevice } from './printing.js?v=202610301029';
-import { Icon } from './icons.js?v=202610301029';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301041';
+import { minutesAgo, clockTime } from '../core/util.js?v=202610301041';
+import { Modal, Field, attempt, toast, Empty, askConfirm } from './ui.js?v=202610301041';
+import { hubError } from './strings.js?v=202610301041';
+import { setDevice } from './printing.js?v=202610301041';
+import { Icon } from './icons.js?v=202610301041';
 
 const KIOSK_WIN = '--kiosk-printing';
 const KIOSK_MAC = 'open -a "Google Chrome" --args --kiosk-printing';

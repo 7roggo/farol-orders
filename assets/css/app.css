@@ -784,3 +784,11 @@ input.h-qr-label:hover, input.h-qr-label:focus { border-color: var(--line); outl
 .h-inbox-reply { display: flex; gap: 8px; align-items: flex-start; margin-top: 8px; }
 .h-inbox-reply textarea { flex: 1; min-height: 38px; }
 .h-count-pill { display: inline-grid; place-items: center; min-width: 22px; height: 22px; padding: 0 7px; margin-left: 8px; border-radius: 999px; background: var(--bad); color: #fff; font-size: 12px; font-weight: 700; }
+
+/* Farol logo */
+.farol-logo, .farol-mark { display: block; flex: none; width: auto; }
+.farol-logo { overflow: visible; }
+.farol-mark { overflow: hidden; }
+.fh .farol-logo, .fh .farol-mark { color: var(--text); }
+.h-login-brand .farol-logo { margin-bottom: 2px; }
+.h-side-brand { padding-left: 10px; }

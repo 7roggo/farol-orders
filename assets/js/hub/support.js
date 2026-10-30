@@ -1,9 +1,9 @@
 // "Help from Farol": a restaurant reports a problem; Farol sees it live in the admin and replies here.
-import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301029';
-import { Modal, Switch, attempt, toast } from './ui.js?v=202610301029';
-import { Icon } from './icons.js?v=202610301029';
-import { hubError } from './strings.js?v=202610301029';
-import { store } from '../core/util.js?v=202610301029';
+import { html, useState, useEffect } from '../vendor/preact-htm.js?v=202610301041';
+import { Modal, Switch, attempt, toast } from './ui.js?v=202610301041';
+import { Icon } from './icons.js?v=202610301041';
+import { hubError } from './strings.js?v=202610301041';
+import { store } from '../core/util.js?v=202610301041';
 
 const TOPICS = ['orders', 'printer', 'menu', 'other'];
 

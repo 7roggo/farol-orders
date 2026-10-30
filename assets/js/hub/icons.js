@@ -1,5 +1,7 @@
 // Line icons for the hub (24×24 grid, 1.75 stroke, drawn in currentColor).
-import { html } from '../vendor/preact-htm.js?v=202610301029';
+import { html } from '../vendor/preact-htm.js?v=202610301041';
+import { Logo, LogoMark } from '../core/logo.js?v=202610301041';
+export { Logo };
 
 const P = {
   orders: ['M6 8a6 6 0 1 1 12 0c0 7 3 8 3 8H3s3-1 3-8', 'M10.3 21a1.94 1.94 0 0 0 3.4 0'],
@@ -49,9 +51,5 @@ export function Icon({ name, size = 18, className = '' }) {
 
 /** The Farol mark: a lamp inside a lighthouse lantern. */
 export function Mark({ size = 22 }) {
-  return html`<svg class="h-markico" width=${size} height=${size} viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-    <rect x="3" y="3" width="18" height="18" rx="6" fill="var(--mark-bg)" />
-    <circle cx="12" cy="12" r="3.6" fill="var(--lamp)" />
-    <path d="M12 3.6v2.4M12 18v2.4M3.6 12H6M18 12h2.4" stroke="var(--lamp)" stroke-width="1.6" stroke-linecap="round" opacity=".55" />
-  </svg>`;
+  return html`<${LogoMark} size=${size} class="h-markico" />`;
 }

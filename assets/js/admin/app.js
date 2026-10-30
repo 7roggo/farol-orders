@@ -1,13 +1,13 @@
 // Farol master admin: create restaurant hubs, invite owners, switch hubs on/off, see activity.
-import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610301029';
-import { money, slugify } from '../core/util.js?v=202610301029';
-import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610301029';
-import { siteBase } from '../api/index.js?v=202610301029';
-import { Mark, Icon } from '../hub/icons.js?v=202610301029';
-import { ThemeButton, Login } from '../hub/app.js?v=202610301029';
-import { HS } from '../hub/strings.js?v=202610301029';
-import { store } from '../core/util.js?v=202610301029';
-import { chime, unlockAudio } from '../hub/alerts.js?v=202610301029';
+import { html, render, useState, useEffect } from '../vendor/preact-htm.js?v=202610301041';
+import { money, slugify } from '../core/util.js?v=202610301041';
+import { Field, Switch, Toasts, ConfirmHost, toast, attempt } from '../hub/ui.js?v=202610301041';
+import { siteBase } from '../api/index.js?v=202610301041';
+import { Mark, Icon, Logo } from '../hub/icons.js?v=202610301041';
+import { ThemeButton, Login } from '../hub/app.js?v=202610301041';
+import { HS } from '../hub/strings.js?v=202610301041';
+import { store } from '../core/util.js?v=202610301041';
+import { chime, unlockAudio } from '../hub/alerts.js?v=202610301041';
 
 const msg = (e) => ({ not_allowed: 'This account is not a Farol admin.', duplicate_slug: 'That web address is already taken.' }[e.code]
   || (/duplicate key|unique/i.test(e.message) ? 'That web address is already taken.' : e.message || 'Something went wrong.'));
@@ -106,7 +106,7 @@ function Admin({ api, session, theme, setTheme }) {
   return html`<div class="hub is-admin">
     ${api.mode === 'demo' && html`<div class="h-demo-banner">Demo mode: data is saved in this browser only.</div>`}
     <header class="h-top">
-      <div class="h-top-title"><${Mark} size=${24} /><span class="h-wordmark">Farol</span><span class="h-tag">admin</span></div>
+      <div class="h-top-title"><${Logo} height=${30} /><span class="h-tag">admin</span></div>
       <div class="h-top-tools"><span class="h-muted h-hide-sm">${session.user.email}</span>
         <${ThemeButton} theme=${theme} setTheme=${setTheme} t=${{ themeLight: 'Light theme', themeDark: 'Dark theme' }} />
         <button class="h-icon-btn" onClick=${() => api.signOut()} aria-label="Sign out" title="Sign out"><${Icon} name="logout" /></button></div>

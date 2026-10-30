@@ -1,8 +1,8 @@
 // Demo backend: the whole platform running inside the browser, no Supabase needed.
 // Same functions as supabase-api.js, same rules as the database. Data is kept in this
 // browser only (and shared between tabs of the same browser).
-import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js?v=202610301029';
-import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js?v=202610301029';
+import { SAMPLE_MENU, SAMPLE_TABLES, SAMPLE_COVER } from '../core/sample-menu.js?v=202610301041';
+import { uid, randomToken, store, localNow, isOpenNow, isPaused } from '../core/util.js?v=202610301041';
 
 const KEY = 'farol-demo-db-v3';
 const now = () => new Date().toISOString();

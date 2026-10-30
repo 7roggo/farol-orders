@@ -1,19 +1,19 @@
 // Restaurant hub: login, live orders, menu, tables & QR, printers, sales, settings.
-import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610301029';
-import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610301029';
-import { HS, hubError } from './strings.js?v=202610301029';
-import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610301029';
-import { useAlerts, unlockAudio } from './alerts.js?v=202610301029';
-import { usePrintEngine, getDevice } from './printing.js?v=202610301029';
-import { OrdersView } from './orders.js?v=202610301029';
-import { MenuView } from './menu.js?v=202610301029';
-import { TablesView } from './tables.js?v=202610301029';
-import { PrintersView } from './printers.js?v=202610301029';
-import { StatsView } from './stats.js?v=202610301029';
-import { SettingsView } from './settings.js?v=202610301029';
-import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610301029';
-import { Icon, Mark } from './icons.js?v=202610301029';
-import { useSupport, SupportButton, SupportModal } from './support.js?v=202610301029';
+import { html, render, useState, useEffect, useRef, useCallback } from '../vendor/preact-htm.js?v=202610301041';
+import { store, isOpenNow, isPaused, clockTime } from '../core/util.js?v=202610301041';
+import { HS, hubError } from './strings.js?v=202610301041';
+import { Toasts, ConfirmHost, attempt, Field } from './ui.js?v=202610301041';
+import { useAlerts, unlockAudio } from './alerts.js?v=202610301041';
+import { usePrintEngine, getDevice } from './printing.js?v=202610301041';
+import { OrdersView } from './orders.js?v=202610301041';
+import { MenuView } from './menu.js?v=202610301041';
+import { TablesView } from './tables.js?v=202610301041';
+import { PrintersView } from './printers.js?v=202610301041';
+import { StatsView } from './stats.js?v=202610301041';
+import { SettingsView } from './settings.js?v=202610301041';
+import { ticketToHtmlBody } from '../../../supabase/functions/_shared/ticket-format.js?v=202610301041';
+import { Icon, Mark, Logo } from './icons.js?v=202610301041';
+import { useSupport, SupportButton, SupportModal } from './support.js?v=202610301041';
 
 const NAV = ['orders', 'menu', 'tables', 'printers', 'stats', 'settings'];
 
@@ -50,7 +50,7 @@ export function Login({ api, t, lang, setLang, recovery, title, tag }) {
   };
   return html`<div class="h-login">
     <form class="h-login-card" onSubmit=${submit}>
-      <div class="h-login-brand"><${Mark} size=${30} /><span class="h-wordmark">Farol</span>${tag && html`<span class="h-tag">${tag}</span>`}</div>
+      <div class="h-login-brand"><${Logo} height=${38} />${tag && html`<span class="h-tag">${tag}</span>`}</div>
       <h1>${mode === 'recovery' ? t.newPassword : mode === 'signup' ? t.createAccount : title || t.loginTitle}</h1>
       ${api.mode === 'demo' && html`<p class="h-note">${t.demoLogin}</p>`}
       ${mode !== 'recovery' && html`<${Field} label=${t.email}><input class="h-input" type="email" required autocomplete="email" value=${email} onInput=${(e) => setEmail(e.target.value)} /></${Field}>`}
@@ -250,7 +250,7 @@ function Hub({ api, t, lang, setLang, theme, setTheme, session, restaurantId, re
 
   return html`<div class="hub ${pending ? 'has-new' : ''} ${kitchen && view === 'orders' ? 'is-kitchen' : ''}">
     <aside class="h-side">
-      <div class="h-side-brand"><${Mark} size=${24} /><span class="h-wordmark">Farol</span></div>
+      <div class="h-side-brand"><${Logo} height=${32} /></div>
       <div class="h-side-rest">
         ${restaurants.length > 1
           ? html`<select class="h-rest-select" value=${restaurantId} onChange=${(e) => onSwitch(e.target.value)} aria-label=${t.chooseRestaurant}>
