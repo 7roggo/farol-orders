@@ -1,7 +1,7 @@
-// Farol Orders — settings. Fill these in after creating your Supabase project
-// (Supabase → Project Settings → API). Leave them empty to run the in-browser demo.
+// Farol Orders — connection to the Supabase project (both values are public by design;
+// the database's security rules protect the data).
 window.FAROL_CONFIG = {
-  supabaseUrl: '',      // e.g. 'https://abcdefghij.supabase.co'
-  supabaseAnonKey: '',  // the "anon public" key (safe to publish; security rules protect the data)
-  siteUrl: '',          // optional, e.g. 'https://pedidos.farol.es/' — used in QR codes. Empty = this site's address.
+  supabaseUrl: 'https://mxceazfglipzwxlhbway.supabase.co',
+  supabaseAnonKey: 'sb_publishable_QBMoQQPcvGk44-On53L7fQ_EgBHWoot',
+  siteUrl: '',   // optional custom address for QR codes, e.g. 'https://pedidos.farol.es/'. Empty = this site's address.
 };
